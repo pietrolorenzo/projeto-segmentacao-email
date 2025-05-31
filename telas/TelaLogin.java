@@ -1,58 +1,84 @@
-
 package telas;
 
-import db.DBConnection;
+import telas.TelaCadastro;
 
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class TelaLogin extends JFrame {
+
     public TelaLogin() {
         setTitle("Login");
-        setSize(300, 200);
+        setSize(350, 220);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null);
+        setLocationRelativeTo(null);
+        setLayout(new GridBagLayout());
 
         JLabel lblUsuario = new JLabel("Usuário:");
+        JTextField txtUsuario = new JTextField(15);
+
         JLabel lblSenha = new JLabel("Senha:");
+        JPasswordField txtSenha = new JPasswordField(15);
 
-        JTextField txtUsuario = new JTextField();
-        JPasswordField txtSenha = new JPasswordField();
+        JButton btnEntrar = new JButton("Entrar");
 
-        JButton btnLogin = new JButton("Entrar");
-        JButton btnRegistrar = new JButton("Registrar");
+        JLabel lblTexto = new JLabel("Não tem conta? ");
+        JLabel lblCadastro = new JLabel("<html><a href=''>Cadastre-se</a></html>");
+        lblCadastro.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        lblUsuario.setBounds(20, 30, 80, 25);
-        txtUsuario.setBounds(100, 30, 160, 25);
-        lblSenha.setBounds(20, 70, 80, 25);
-        txtSenha.setBounds(100, 70, 160, 25);
-        btnLogin.setBounds(10, 110, 100, 25);
-        btnRegistrar.setBounds(120, 110, 100, 25);
+        // Layout
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(lblUsuario, gbc);
+        gbc.gridx = 1;
+        add(txtUsuario, gbc);
 
-        add(lblUsuario); add(txtUsuario);
-        add(lblSenha); add(txtSenha);
-        add(btnLogin);
-        add(btnRegistrar);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        add(lblSenha, gbc);
+        gbc.gridx = 1;
+        add(txtSenha, gbc);
 
-        btnLogin.addActionListener(e -> {
-            try (Connection con = DBConnection.getConnection()) {
-                String sql = "SELECT * FROM usuario WHERE username=? AND senha=?";
-                PreparedStatement stmt = con.prepareStatement(sql);
-                stmt.setString(1, txtUsuario.getText());
-                stmt.setString(2, new String(txtSenha.getPassword()));
-                ResultSet rs = stmt.executeQuery();
-                if (rs.next()) {
-                    JOptionPane.showMessageDialog(this, "Login bem-sucedido!");
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        add(btnEntrar, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        add(lblTexto, gbc);
+        gbc.gridx = 1;
+        add(lblCadastro, gbc);
+
+        // Evento do botão Entrar
+        btnEntrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String usuario = txtUsuario.getText();
+                String senha = new String(txtSenha.getPassword());
+
+                if (usuario.equals("admin") && senha.equals("1234")) {
+                    JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
+                    // Aqui você pode abrir outra tela, ex:
+                    // new TelaPrincipal().setVisible(true);
+                    dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Usuário ou senha incorretos.");
+                    JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos.");
                 }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
             }
         });
 
-        setVisible(true);
+        // Evento clique em "Cadastre-se"
+        lblCadastro.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                new TelaCadastro().setVisible(true);
+                dispose();
+            }
+        });
     }
 }
+

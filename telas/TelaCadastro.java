@@ -14,9 +14,9 @@ public class TelaCadastro extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        JLabel lblNome = new JLabel("Nome:");
+        JLabel lblNome = new JLabel("Usuário:");
         JLabel lblEmail = new JLabel("Email:");
-        JLabel lblUsuario = new JLabel("Usuário:");
+        JLabel lblUsuario = new JLabel("Nomee:");
         JLabel lblSenha = new JLabel("Senha:");
 
         JTextField txtNome = new JTextField();
