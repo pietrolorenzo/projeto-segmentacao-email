@@ -10,35 +10,37 @@ import java.util.ArrayList;
 
 public class TelaPrincipal extends JFrame {
     private DefaultListModel<String> listaSegmentos;
-    private ArrayList<Condicao> condicoes; // Lista para armazenar as condições
+    private ArrayList<Condicao> condicoes;
+    private JList<String> listSegmentos;
 
     public TelaPrincipal() {
         setTitle("Segmentação de E-mails");
-        setSize(900, 600);
+        setSize(1000, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         getContentPane().setBackground(Color.WHITE);
         setLayout(new BorderLayout(20, 20));
 
-        // Painel de criação de segmento
+        // Painel principal
+        JPanel painelPrincipal = new JPanel(new GridLayout(1, 2, 20, 0));
+        painelPrincipal.setBackground(Color.WHITE);
+        painelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        // =================== Painel de criação de segmento ===================
         JPanel painelCriacao = new JPanel();
         painelCriacao.setBackground(Color.WHITE);
         painelCriacao.setLayout(new BoxLayout(painelCriacao, BoxLayout.Y_AXIS));
-        painelCriacao.setBorder(new EmptyBorder(20, 20, 20, 20));
+        painelCriacao.setBorder(BorderFactory.createTitledBorder("Criar Segmento"));
 
-        JLabel titulo = new JLabel("Criar Segmento");
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        painelCriacao.add(titulo);
-
-        painelCriacao.add(Box.createVerticalStrut(10));
-        JLabel descricaoTitulo = new JLabel("Use segmentos para criar listas personalizadas com múltiplos critérios à sua escolha");
+        JLabel descricaoTitulo = new JLabel("Crie listas personalizadas com múltiplos critérios à sua escolha");
         descricaoTitulo.setFont(new Font("Arial", Font.PLAIN, 14));
         painelCriacao.add(descricaoTitulo);
+        painelCriacao.add(Box.createVerticalStrut(10));
 
         // Campos de texto
         JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         inputPanel.setBackground(Color.WHITE);
-        inputPanel.setBorder(new EmptyBorder(20, 0, 0, 0));
+        inputPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
         JTextField txtNome = new JTextField();
         JTextField txtDescricao = new JTextField();
@@ -48,52 +50,68 @@ public class TelaPrincipal extends JFrame {
         inputPanel.add(txtDescricao);
 
         painelCriacao.add(inputPanel);
-
         painelCriacao.add(Box.createVerticalStrut(20));
 
-        // Condições do segmento
-        JLabel lblCondicoes = new JLabel("Condições do Segmento");
-        lblCondicoes.setFont(new Font("Arial", Font.BOLD, 16));
+        // Condições
+        JLabel lblCondicoes = new JLabel("Condições do Segmento:");
+        lblCondicoes.setFont(new Font("Arial", Font.BOLD, 14));
         painelCriacao.add(lblCondicoes);
 
         condicoes = new ArrayList<>();
         JPanel condPanel = new JPanel();
         condPanel.setLayout(new BoxLayout(condPanel, BoxLayout.Y_AXIS));
-        painelCriacao.add(condPanel);
+        condPanel.setBackground(Color.WHITE);
+        JScrollPane condScroll = new JScrollPane(condPanel);
+        condScroll.setPreferredSize(new Dimension(450, 200));
+        painelCriacao.add(condScroll);
 
-        // Botão para adicionar condições
         JButton btnAddCondicao = new JButton("+ Adicionar Condição");
         btnAddCondicao.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnAddCondicao.addActionListener(e -> adicionarCondicao(condPanel));
+        painelCriacao.add(Box.createVerticalStrut(10));
         painelCriacao.add(btnAddCondicao);
 
         JButton btnSalvar = new JButton("Salvar Segmento");
-        btnSalvar.setBackground(new Color(70, 130, 180));
+        btnSalvar.setBackground(new Color(34, 139, 34));
         btnSalvar.setForeground(Color.WHITE);
         btnSalvar.setFocusPainted(false);
         btnSalvar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnSalvar.setAlignmentX(Component.LEFT_ALIGNMENT);
         painelCriacao.add(Box.createVerticalStrut(20));
         painelCriacao.add(btnSalvar);
 
-        add(painelCriacao, BorderLayout.NORTH);
+        painelPrincipal.add(painelCriacao);
 
-        // Painel de segmentos existentes
+        // =================== Painel de segmentos existentes ===================
         JPanel painelLista = new JPanel();
         painelLista.setLayout(new BorderLayout(10, 10));
-        painelLista.setBorder(new EmptyBorder(10, 20, 20, 20));
+        painelLista.setBorder(BorderFactory.createTitledBorder("Segmentos Criados"));
         painelLista.setBackground(Color.WHITE);
 
-        JLabel lblLista = new JLabel("Segmentos Criados");
-        lblLista.setFont(new Font("Arial", Font.BOLD, 18));
-        painelLista.add(lblLista, BorderLayout.NORTH);
-
         listaSegmentos = new DefaultListModel<>();
-        JList<String> list = new JList<>(listaSegmentos);
-        list.setFont(new Font("Arial", Font.PLAIN, 14));
-        JScrollPane scroll = new JScrollPane(list);
+        listSegmentos = new JList<>(listaSegmentos);
+        listSegmentos.setFont(new Font("Arial", Font.PLAIN, 14));
+        JScrollPane scroll = new JScrollPane(listSegmentos);
         painelLista.add(scroll, BorderLayout.CENTER);
 
-        add(painelLista, BorderLayout.CENTER);
+        JButton btnRemover = new JButton("Excluir Segmento Selecionado");
+        btnRemover.setBackground(new Color(178, 34, 34));
+        btnRemover.setForeground(Color.WHITE);
+        btnRemover.setFont(new Font("Arial", Font.BOLD, 13));
+        btnRemover.setFocusPainted(false);
+        btnRemover.addActionListener(e -> {
+            int selectedIndex = listSegmentos.getSelectedIndex();
+            if (selectedIndex != -1) {
+                listaSegmentos.remove(selectedIndex);
+            } else {
+                JOptionPane.showMessageDialog(this, "Selecione um segmento para excluir.", "Atenção", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        painelLista.add(btnRemover, BorderLayout.SOUTH);
+
+        painelPrincipal.add(painelLista);
+        add(painelPrincipal, BorderLayout.CENTER);
 
         // Ação do botão salvar com validação
         btnSalvar.addActionListener((ActionEvent e) -> {
@@ -116,7 +134,8 @@ public class TelaPrincipal extends JFrame {
             }
 
             String data = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            listaSegmentos.addElement(nome + " | " + (desc.isEmpty() ? "Sem descrição" : desc) + " | Condições: " + condicoesTexto.toString() + " | Criado em: " + data);
+            listaSegmentos.addElement(nome + " | " + (desc.isEmpty() ? "Sem descrição" : desc) +
+                    " | Condições: " + condicoesTexto.toString() + " | Criado em: " + data);
 
             // Limpa os campos após salvar
             txtNome.setText("");
@@ -128,40 +147,49 @@ public class TelaPrincipal extends JFrame {
         });
     }
 
-    // Método para adicionar uma nova condição
     private void adicionarCondicao(JPanel condPanel) {
-        Condicao condicao = new Condicao();
+        Condicao condicao = new Condicao(condPanel);
+        condicoes.add(condicao);
         condPanel.add(condicao.painel);
         condPanel.revalidate();
         condPanel.repaint();
-        condicoes.add(condicao);
     }
 
-    // Classe interna para representar uma condição
+
     private class Condicao {
         JPanel painel;
         JComboBox<String> cbCaracteristica;
         JComboBox<String> cbOperador;
         JTextField txtValor;
 
-        Condicao() {
+        Condicao(JPanel condPanel) {
             painel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-            painel.setBackground(Color.WHITE);
+            painel.setBackground(new Color(245, 245, 245));
+            painel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-            // Características disponíveis
-            String[] caracteristicas = {"Gênero", "Cidade", "Ticket Médio"};
+            String[] caracteristicas = {"Gênero", "Cidade", "Ticket Médio", "Idade", "Estado Civil"};
             cbCaracteristica = new JComboBox<>(caracteristicas);
 
-            // Operadores genéricos
             String[] operadores = {"Igual a", "Diferente de", "Maior que", "Menor que"};
             cbOperador = new JComboBox<>(operadores);
 
-            // Campo de valor (pode ser texto ou número)
-            txtValor = new JTextField(15);
+            txtValor = new JTextField(12);
+
+            JButton btnExcluir = new JButton("Excluir");
+            btnExcluir.setForeground(Color.WHITE);
+            btnExcluir.setBackground(new Color(178, 34, 34));
+            btnExcluir.setFocusPainted(false);
+            btnExcluir.addActionListener(e -> {
+                condicoes.remove(this);
+                condPanel.remove(painel);
+                condPanel.revalidate();
+                condPanel.repaint();
+            });
 
             painel.add(cbCaracteristica);
             painel.add(cbOperador);
             painel.add(txtValor);
+            painel.add(btnExcluir);
         }
 
         @Override
@@ -173,6 +201,7 @@ public class TelaPrincipal extends JFrame {
         }
     }
 
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             TelaPrincipal tela = new TelaPrincipal();
@@ -180,3 +209,4 @@ public class TelaPrincipal extends JFrame {
         });
     }
 }
+
