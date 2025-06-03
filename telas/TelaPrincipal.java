@@ -140,33 +140,36 @@ public class TelaPrincipal extends JFrame {
     // Classe interna para representar uma condição
     private class Condicao {
         JPanel painel;
-        JComboBox<String> cbLocalizacao;
-        JComboBox<String> cbIdade;
-        JComboBox<String> cbRenda;
+        JComboBox<String> cbCaracteristica;
+        JComboBox<String> cbOperador;
+        JTextField txtValor;
 
         Condicao() {
             painel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
             painel.setBackground(Color.WHITE);
 
-            String[] local = {"Selecione a localização", "Brasil", "Estados Unidos", "Portugal", "Alemanha", "Rússia"};
-            String[] idade = {"Selecione a idade", "17-", "18-29", "30-39", "40-49", "50-59", "60+"};
-            String[] renda = {"Selecione a renda mensal", "Salário mínimo", "2000-3000", "5000-10000", "15000+"};
+            // Características disponíveis
+            String[] caracteristicas = {"Gênero", "Cidade", "Ticket Médio"};
+            cbCaracteristica = new JComboBox<>(caracteristicas);
 
-            cbLocalizacao = new JComboBox<>(local);
-            cbIdade = new JComboBox<>(idade);
-            cbRenda = new JComboBox<>(renda);
+            // Operadores genéricos
+            String[] operadores = {"Igual a", "Diferente de", "Maior que", "Menor que"};
+            cbOperador = new JComboBox<>(operadores);
 
-            painel.add(cbLocalizacao);
-            painel.add(cbIdade);
-            painel.add(cbRenda);
+            // Campo de valor (pode ser texto ou número)
+            txtValor = new JTextField(15);
+
+            painel.add(cbCaracteristica);
+            painel.add(cbOperador);
+            painel.add(txtValor);
         }
 
         @Override
         public String toString() {
-            String local = (String) cbLocalizacao.getSelectedItem();
-            String idade = (String) cbIdade.getSelectedItem();
-            String renda = (String) cbRenda.getSelectedItem();
-            return "Localização: " + local + ", Idade: " + idade + ", Renda: " + renda;
+            String carac = (String) cbCaracteristica.getSelectedItem();
+            String op = (String) cbOperador.getSelectedItem();
+            String val = txtValor.getText().trim();
+            return carac + " " + op + " " + val;
         }
     }
 
