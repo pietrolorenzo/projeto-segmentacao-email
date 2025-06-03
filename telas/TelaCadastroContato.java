@@ -35,7 +35,7 @@ public class TelaCadastroContato extends JFrame {
         JButton botaoCadastrar = new JButton("Cadastrar");
         JButton botaoLogout = new JButton("Log out");
 
-        // Layout
+
         JPanel painel = new JPanel();
         GroupLayout layout = new GroupLayout(painel);
         painel.setLayout(layout);
@@ -106,7 +106,7 @@ public class TelaCadastroContato extends JFrame {
 
         add(painel);
 
-        // Ação do botão cadastrar
+
         botaoCadastrar.addActionListener(e -> {
             try (Connection con = DBConnection.getConnection()) {
                 String sql = "INSERT INTO contato (usuario_id, nome, email, idade, cep, estado_civil, sexo, renda) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -135,10 +135,10 @@ public class TelaCadastroContato extends JFrame {
             }
         });
 
-        // Ação do botão log out
+
         botaoLogout.addActionListener(e -> {
-            dispose(); // Fecha a tela atual
-            new TelaLogin().setVisible(true); // Retorna à tela de login
+            dispose();
+            new TelaLogin().setVisible(true);
         });
     }
 }

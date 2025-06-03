@@ -17,12 +17,10 @@ public class TelaCadastro extends JFrame {
         setLocationRelativeTo(null);
         getContentPane().setBackground(new Color(240, 240, 255));
 
-
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
 
         JLabel lblTitulo = new JLabel("Crie sua conta");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
@@ -30,12 +28,10 @@ public class TelaCadastro extends JFrame {
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblTitulo.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 
-
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new GridLayout(8, 1, 10, 10));
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
 
         JLabel lblNome = new JLabel("Nome Completo:");
         JTextField txtNome = createStyledTextField();
@@ -49,7 +45,6 @@ public class TelaCadastro extends JFrame {
         JLabel lblSenha = new JLabel("Senha:");
         JPasswordField txtSenha = createStyledPasswordField();
 
-
         formPanel.add(lblNome);
         formPanel.add(txtNome);
         formPanel.add(lblEmail);
@@ -59,17 +54,14 @@ public class TelaCadastro extends JFrame {
         formPanel.add(lblSenha);
         formPanel.add(txtSenha);
 
-
         JButton btnCadastrar = new JButton("Cadastrar");
         styleButton(btnCadastrar);
         btnCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 
         JLabel lblLogin = new JLabel("Já tem uma conta? Faça login");
         lblLogin.setForeground(new Color(70, 130, 180));
         lblLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 
         mainPanel.add(lblTitulo);
         mainPanel.add(formPanel);
@@ -78,12 +70,10 @@ public class TelaCadastro extends JFrame {
         mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         mainPanel.add(lblLogin);
 
-
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         add(scrollPane);
-
 
         btnCadastrar.addActionListener(e -> {
             if (validarCampos(txtNome, txtEmail, txtUsuario, txtSenha)) {
@@ -115,6 +105,7 @@ public class TelaCadastro extends JFrame {
                 BorderFactory.createEmptyBorder(8, 10, 8, 10)
         ));
         field.setFont(new Font("Arial", Font.PLAIN, 14));
+        addFocusEffect(field);
         return field;
     }
 
@@ -126,7 +117,28 @@ public class TelaCadastro extends JFrame {
                 BorderFactory.createEmptyBorder(8, 10, 8, 10)
         ));
         field.setFont(new Font("Arial", Font.PLAIN, 14));
+        addFocusEffect(field);
         return field;
+    }
+
+    private void addFocusEffect(JComponent component) {
+        component.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                component.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(70, 130, 180), 2),
+                        BorderFactory.createEmptyBorder(8, 10, 8, 10)
+                ));
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                component.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                        BorderFactory.createEmptyBorder(8, 10, 8, 10)
+                ));
+            }
+        });
     }
 
     private void styleButton(JButton button) {
