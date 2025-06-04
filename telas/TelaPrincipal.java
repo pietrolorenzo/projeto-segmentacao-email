@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import db.DBConnection;
+import java.sql.*;
 
 public class TelaPrincipal extends JFrame {
     private DefaultListModel<String> listaSegmentos;
@@ -21,12 +23,11 @@ public class TelaPrincipal extends JFrame {
         getContentPane().setBackground(Color.WHITE);
         setLayout(new BorderLayout(20, 20));
 
-        // Painel principal
         JPanel painelPrincipal = new JPanel(new GridLayout(1, 2, 20, 0));
         painelPrincipal.setBackground(Color.WHITE);
         painelPrincipal.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // =================== Painel de criação de segmento ===================
+        // Painel de criação de segmento
         JPanel painelCriacao = new JPanel();
         painelCriacao.setBackground(Color.WHITE);
         painelCriacao.setLayout(new BoxLayout(painelCriacao, BoxLayout.Y_AXIS));
@@ -37,7 +38,6 @@ public class TelaPrincipal extends JFrame {
         painelCriacao.add(descricaoTitulo);
         painelCriacao.add(Box.createVerticalStrut(10));
 
-        // Campos de texto
         JPanel inputPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         inputPanel.setBackground(Color.WHITE);
         inputPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
@@ -52,7 +52,6 @@ public class TelaPrincipal extends JFrame {
         painelCriacao.add(inputPanel);
         painelCriacao.add(Box.createVerticalStrut(20));
 
-        // Condições
         JLabel lblCondicoes = new JLabel("Condições do Segmento:");
         lblCondicoes.setFont(new Font("Arial", Font.BOLD, 14));
         painelCriacao.add(lblCondicoes);
@@ -82,7 +81,7 @@ public class TelaPrincipal extends JFrame {
 
         painelPrincipal.add(painelCriacao);
 
-        // =================== Painel de segmentos existentes ===================
+        // Painel de lista de segmentos
         JPanel painelLista = new JPanel();
         painelLista.setLayout(new BorderLayout(10, 10));
         painelLista.setBorder(BorderFactory.createTitledBorder("Segmentos Criados"));
@@ -102,7 +101,25 @@ public class TelaPrincipal extends JFrame {
         btnRemover.addActionListener(e -> {
             int selectedIndex = listSegmentos.getSelectedIndex();
             if (selectedIndex != -1) {
-                listaSegmentos.remove(selectedIndex);
+                String item = listaSegmentos.get(selectedIndex);
+                String nomeSegmento = item.split(" \\|")[0];
+
+                try (Connection conn = DBConnection.getConnection()) {
+                    String sql = "DELETE FROM segmentos WHERE nome = ?";
+                    PreparedStatement stmt = conn.prepareStatement(sql);
+                    stmt.setString(1, nomeSegmento);
+                    int rowsAffected = stmt.executeUpdate();
+
+                    if (rowsAffected > 0) {
+                        listaSegmentos.remove(selectedIndex);
+                        JOptionPane.showMessageDialog(this, "Segmento excluído do banco e da lista.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Não foi possível excluir do banco.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Erro ao excluir segmento: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Selecione um segmento para excluir.", "Atenção", JOptionPane.WARNING_MESSAGE);
             }
@@ -113,7 +130,7 @@ public class TelaPrincipal extends JFrame {
         painelPrincipal.add(painelLista);
         add(painelPrincipal, BorderLayout.CENTER);
 
-        // Ação do botão salvar com validação
+        // Ação do botão salvar
         btnSalvar.addActionListener((ActionEvent e) -> {
             String nome = txtNome.getText().trim();
             String desc = txtDescricao.getText().trim();
@@ -133,18 +150,62 @@ public class TelaPrincipal extends JFrame {
                 condicoesTexto.append(condicao.toString()).append(" | ");
             }
 
-            String data = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            listaSegmentos.addElement(nome + " | " + (desc.isEmpty() ? "Sem descrição" : desc) +
-                    " | Condições: " + condicoesTexto.toString() + " | Criado em: " + data);
+            Timestamp agora = Timestamp.valueOf(LocalDateTime.now());
 
-            // Limpa os campos após salvar
-            txtNome.setText("");
-            txtDescricao.setText("");
-            condicoes.clear();
-            condPanel.removeAll();
-            condPanel.revalidate();
-            condPanel.repaint();
+            try (Connection conn = DBConnection.getConnection()) {
+                String sql = "INSERT INTO segmentos (nome, descricao, condicoes, data_criacao) VALUES (?, ?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, nome);
+                stmt.setString(2, desc.isEmpty() ? null : desc);
+                stmt.setString(3, condicoesTexto.toString());
+                stmt.setTimestamp(4, agora);
+                stmt.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Segmento salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
+                String dataFormatada = agora.toLocalDateTime().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                listaSegmentos.addElement(nome + " | " + (desc.isEmpty() ? "Sem descrição" : desc)
+                        + " | Condições: " + condicoesTexto + " | Criado em: " + dataFormatada);
+
+                txtNome.setText("");
+                txtDescricao.setText("");
+                condicoes.clear();
+                condPanel.removeAll();
+                condPanel.revalidate();
+                condPanel.repaint();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Erro ao salvar no banco: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
         });
+
+        // ⚡ Chama ao final do construtor
+        carregarSegmentosDoBanco();
+    }
+
+    private void carregarSegmentosDoBanco() {
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "SELECT nome, descricao, condicoes, data_criacao FROM segmentos ORDER BY data_criacao DESC";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+            while (rs.next()) {
+                String nome = rs.getString("nome");
+                String desc = rs.getString("descricao");
+                String conds = rs.getString("condicoes");
+                Timestamp data = rs.getTimestamp("data_criacao");
+                String dataFormatada = data.toLocalDateTime().format(formatter);
+
+                listaSegmentos.addElement(nome + " | " + (desc == null || desc.isEmpty() ? "Sem descrição" : desc)
+                        + " | Condições: " + conds + " | Criado em: " + dataFormatada);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao carregar segmentos do banco: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void adicionarCondicao(JPanel condPanel) {
@@ -154,7 +215,6 @@ public class TelaPrincipal extends JFrame {
         condPanel.revalidate();
         condPanel.repaint();
     }
-
 
     private class Condicao {
         JPanel painel;
@@ -194,13 +254,9 @@ public class TelaPrincipal extends JFrame {
 
         @Override
         public String toString() {
-            String carac = (String) cbCaracteristica.getSelectedItem();
-            String op = (String) cbOperador.getSelectedItem();
-            String val = txtValor.getText().trim();
-            return carac + " " + op + " " + val;
+            return cbCaracteristica.getSelectedItem() + " " + cbOperador.getSelectedItem() + " " + txtValor.getText().trim();
         }
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
@@ -209,4 +265,3 @@ public class TelaPrincipal extends JFrame {
         });
     }
 }
-
