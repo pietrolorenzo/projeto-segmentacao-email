@@ -276,7 +276,7 @@ public class TelaSegmentacao extends JFrame {
         }
     }
 
-    private static class Segmento {
+    static class Segmento {
         private String nome;
         private String descricao;
         private String status;
