@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ public class TelaFiltroSegmentos extends JFrame {
 
         abas.addTab("Filtrar Segmentos", criarAbaFiltroUnificado());
         abas.addTab("Criar Novo Segmento", criarAbaCriarSegmento());
+        abas.addTab("Outros", new JPanel()); // Aba em branco movida para o final com nome padrão
 
         add(abas, BorderLayout.CENTER);
     }
@@ -61,6 +64,32 @@ public class TelaFiltroSegmentos extends JFrame {
         tabelaSegmentos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         tabelaSegmentos.setRowHeight(26);
         tabelaSegmentos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        tabelaSegmentos.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && tabelaSegmentos.getSelectedRow() != -1) {
+                    int index = tabelaSegmentos.getSelectedRow();
+                    TelaSegmentacao.Segmento seg = todosSegmentos.get(index);
+
+                    // Aqui você pode trocar esse JOptionPane por uma tela própria para editar/excluir
+                    int option = JOptionPane.showOptionDialog(
+                            null,
+                            "Nome: " + seg.getNome() + "\nDescrição: " + seg.getDescricao() + "\nStatus: " + seg.getStatus(),
+                            "Segmento Selecionado",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null,
+                            new String[]{"Editar", "Fechar"},
+                            "Fechar"
+                    );
+
+                    if (option == 0) { // Editar
+                        editarSegmento(seg, index);
+                    }
+                }
+            }
+        });
+
         JScrollPane scroll = new JScrollPane(tabelaSegmentos);
 
         painel.add(topo, BorderLayout.NORTH);
@@ -84,24 +113,60 @@ public class TelaFiltroSegmentos extends JFrame {
         return painel;
     }
 
+    private void editarSegmento(TelaSegmentacao.Segmento segmento, int index) {
+        JTextField campoNome = new JTextField(segmento.getNome());
+        JTextField campoDescricao = new JTextField(segmento.getDescricao());
+        JComboBox<String> comboStatus = new JComboBox<>(new String[]{"Pronto para enviar", "Em rascunho", "Inativo"});
+        comboStatus.setSelectedItem(segmento.getStatus());
+
+        JPanel painel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0; gbc.gridy = 0; painel.add(new JLabel("Nome:"), gbc);
+        gbc.gridx = 1; painel.add(campoNome, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1; painel.add(new JLabel("Descrição:"), gbc);
+        gbc.gridx = 1; painel.add(campoDescricao, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2; painel.add(new JLabel("Status:"), gbc);
+        gbc.gridx = 1; painel.add(comboStatus, gbc);
+
+        int opcao = JOptionPane.showConfirmDialog(this, painel, "Editar Segmento", JOptionPane.OK_CANCEL_OPTION);
+
+        if (opcao == JOptionPane.OK_OPTION) {
+            String novoNome = campoNome.getText().trim();
+            String novaDescricao = campoDescricao.getText().trim();
+            String novoStatus = (String) comboStatus.getSelectedItem();
+
+            if (novoNome.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "O nome não pode ficar vazio.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            todosSegmentos.set(index, segmento);
+            atualizarTabela(todosSegmentos);
+        }
+    }
+
     private JPanel criarAbaCriarSegmento() {
-        JPanel painel = new JPanel();
-        painel.setLayout(new GridBagLayout());
+        JPanel painel = new JPanel(new GridBagLayout());
         painel.setBackground(new Color(245, 248, 255));
-        painel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        painel.setBorder(BorderFactory.createEmptyBorder(30, 100, 30, 100));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(12, 12, 12, 12);
 
         JLabel lblNome = new JLabel("Nome do Segmento:");
         lblNome.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JTextField campoNome = new JTextField(20);
+        JTextField campoNome = new JTextField(25);
         campoNome.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         JLabel lblDescricao = new JLabel("Descrição:");
         lblDescricao.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JTextField campoDescricao = new JTextField(20);
+        JTextField campoDescricao = new JTextField(25);
         campoDescricao.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         JLabel lblStatus = new JLabel("Status:");
@@ -146,6 +211,8 @@ public class TelaFiltroSegmentos extends JFrame {
 
             TelaSegmentacao.Segmento novo = new TelaSegmentacao.Segmento(nome, desc, status);
             todosSegmentos.add(novo);
+            atualizarTabela(todosSegmentos);
+
             JOptionPane.showMessageDialog(this, "Segmento adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
             campoNome.setText("");
