@@ -1,17 +1,39 @@
 package org.listasmart.interfaces;
 
-import org.listasmart.User;
-import org.listasmart.services.UserService;
-import org.listasmart.services.FileHandler;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.awt.*;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+
+import org.listasmart.User;
+import org.listasmart.services.FileHandler;
+import org.listasmart.services.UserService;
 
 public class GUI extends JFrame {
     private UserService userService;
@@ -19,375 +41,304 @@ public class GUI extends JFrame {
     private DefaultTableModel tableModel;
     private JTextField fieldName, fieldEmail, fieldTags, fieldSearch;
     private JTextArea areaResults;
+    private JButton buttonUpdate, buttonDelete;
+
+    private final Color PRIMARY_COLOR = new Color(21, 150, 207); // DodgerBlue
+    private final Color SECONDARY_COLOR = new Color(240, 245, 250);
+    private final Color HIGHLIGHT_COLOR = new Color(200, 230, 255);
+    private final Color DIVIDER_COLOR = new Color(200, 200, 200);
 
     public GUI() {
-        // Carrega usuários ao iniciar
         List<User> defaultUsers = FileHandler.loadUsers();
-
-        int maxID = defaultUsers.stream()
-                .mapToInt(u -> Integer.parseInt(u.getId())).max().orElse(0);
-        User.setNextID(maxID++);
+        int maxID = defaultUsers.stream().mapToInt(u -> Integer.parseInt(u.getId())).max().orElse(0);
+        User.setNextID(maxID + 1);
 
         this.userService = new UserService(defaultUsers);
 
-        this.initializeComponents();
-        this.setupLayout();
-        this.setupEventListeners();
-        this.updateTable();
+        initializeComponents();
+        setupLayout();
+        setupListeners();
+        updateTable();
 
-        this.setTitle("Sistema de Gerenciamento de Usuários");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(1000, 700);
-        this.setLocationRelativeTo(null);
+        setTitle("Sistema de Gerenciamento de Usuários");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1100, 720);
+        setLocationRelativeTo(null);
+        setMinimumSize(new Dimension(900, 600));
     }
 
     private void initializeComponents() {
-        // Campos de entrada
-        this.fieldName = new JTextField(20);
-        this.fieldEmail = new JTextField(20);
-        this.fieldTags = new JTextField(20);
-        this.fieldSearch = new JTextField(20);
+        fieldName = new JTextField(25);
+        fieldEmail = new JTextField(25);
+        fieldTags = new JTextField(25);
+        fieldSearch = new JTextField(20);
 
-        // Tabela para exibir usuários
         String[] columns = {"ID", "Nome", "Email", "Tags"};
-        this.tableModel = new DefaultTableModel(columns, 0) {
-            public boolean isCellEditable(int row, int column) {return false;}
+        tableModel = new DefaultTableModel(columns, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
 
-        this.tableUsers = new JTable(tableModel);
-        this.tableUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tableUsers = new JTable(tableModel) {
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (!isRowSelected(row)) {
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : SECONDARY_COLOR);
+                } else {
+                    c.setBackground(HIGHLIGHT_COLOR);
+                }
+                return c;
+            }
+        };
 
-        // Área de resultados
-        this.areaResults = new JTextArea(5, 30);
-        this.areaResults.setEditable(false);
-        this.areaResults.setBackground(Color.LIGHT_GRAY);
+        // Define cor da linha divisória fina e padrão
+        tableUsers.setShowGrid(true);
+        tableUsers.setGridColor(DIVIDER_COLOR);
+        tableUsers.setRowHeight(36);
+        tableUsers.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        JTableHeader header = tableUsers.getTableHeader();
+        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        header.setBackground(PRIMARY_COLOR);
+        header.setForeground(Color.WHITE);
+
+        // Alinhar colunas (exemplo: ID centralizado)
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tableUsers.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+        tableUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tableUsers.setFillsViewportHeight(true);
+        tableUsers.setAutoCreateRowSorter(true);
+
+        areaResults = new JTextArea(6, 30);
+        areaResults.setEditable(false);
+        areaResults.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        areaResults.setBackground(SECONDARY_COLOR);
     }
 
-    public void setupLayout() {
-        this.setLayout(new BorderLayout());
+    private void setupLayout() {
+        setLayout(new BorderLayout(10, 10));
 
-        // Painel superior - Formulário de cadastro
-        JPanel registerPanel = new JPanel(new GridBagLayout());
-        registerPanel.setBorder(BorderFactory.createTitledBorder("Registro/Atualizar Usuário"));
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(5, 5, 5, 5);
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBorder(new EmptyBorder(15, 20, 10, 20));
+        topPanel.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 6, 6, 6);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        c.gridx = 0;
-        c.gridy = 0;
+        gbc.gridx = 0; gbc.gridy = 0;
+        topPanel.add(new JLabel("Nome:"), gbc);
+        gbc.gridx = 1; gbc.gridwidth = 2;
+        topPanel.add(fieldName, gbc);
 
-        registerPanel.add(new JLabel("Nome:"), c);
-        c.gridx = 1;
-        registerPanel.add(fieldName, c);
-        c.gridx = 0;
-        c.gridy = 1;
-        registerPanel.add(new JLabel("Email:"), c);
-        c.gridx = 1;
-        registerPanel.add(fieldEmail, c);
-        c.gridx = 0;
-        c.gridy = 2;
-        registerPanel.add(new JLabel("Tags (separadas por vírgula):"), c);
-        c.gridx = 1;
-        registerPanel.add(fieldTags, c);
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 1;
+        topPanel.add(new JLabel("Email:"), gbc);
+        gbc.gridx = 1; gbc.gridwidth = 2;
+        topPanel.add(fieldEmail, gbc);
 
-        // Botões do formulário
-        JPanel panelRegisterButtons = new JPanel(new FlowLayout());
-        JButton buttonRegister = new JButton("Registrar");
-        JButton buttonUpdate = new JButton("Atualizar Selecionado");
-        JButton buttonDelete = new JButton("Excluir Selecionado");
-        JButton buttonClean = new JButton("Limpar campos");
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 1;
+        topPanel.add(new JLabel("Tags (vírgula):"), gbc);
+        gbc.gridx = 1; gbc.gridwidth = 2;
+        topPanel.add(fieldTags, gbc);
 
-        panelRegisterButtons.add(buttonRegister);
-        panelRegisterButtons.add(buttonUpdate);
-        panelRegisterButtons.add(buttonDelete);
-        panelRegisterButtons.add(buttonClean);
+        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 1;
+        JButton btnRegister = new JButton("Registrar");
+        JButton btnClear = new JButton("Limpar");
+        buttonUpdate = new JButton("Atualizar");
+        buttonDelete = new JButton("Excluir");
 
-        c.gridx = 0;
-        c.gridy = 3;
-        c.gridwidth = 2;
-        registerPanel.add(panelRegisterButtons, c);
+        // Aplica estilo azul nos botões
+        styleButton(btnRegister);
+        styleButton(btnClear);
+        styleButton(buttonUpdate);
+        styleButton(buttonDelete);
 
-        this.add(registerPanel, "North");
+        topPanel.add(btnRegister, gbc);
+        gbc.gridx = 1; topPanel.add(buttonUpdate, gbc);
+        gbc.gridx = 2; topPanel.add(buttonDelete, gbc);
+        gbc.gridx = 3; topPanel.add(btnClear, gbc);
 
-        // painel central - Tabela de usuários
-        JPanel panelTable = new JPanel(new BorderLayout());
-        panelTable.setBorder(BorderFactory.createTitledBorder("Lista de Usuários"));
+        add(topPanel, BorderLayout.NORTH);
 
-        JScrollPane scrollPane = new JScrollPane(this.tableUsers);
-        panelTable.add(scrollPane, "Center");
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setBorder(BorderFactory.createTitledBorder("Usuários Cadastrados"));
 
-        // Painel de busca e filtro
-        JPanel searchPanel = new JPanel(new FlowLayout());
-        searchPanel.add(new JLabel("Buscar/Filtrar"));
-        searchPanel.add(this.fieldSearch);
-        JButton buttonSearchID = new JButton("Buscar por ID");
-        JButton buttonSearchName = new JButton("Buscar por Nome");
-        JButton buttonSearchEmail = new JButton("Buscar por Email");
-        JButton buttonFilter = new JButton("Segmentar por Tags");
-        JButton buttonListAll = new JButton("Listar todos");
+        JScrollPane scrollPane = new JScrollPane(tableUsers);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
 
-        searchPanel.add(buttonSearchID);
-        searchPanel.add(buttonSearchName);
-        searchPanel.add(buttonSearchEmail);
-        searchPanel.add(buttonFilter);
-        searchPanel.add(buttonListAll);
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.add(new JLabel("Buscar:"));
+        searchPanel.add(fieldSearch);
+        JButton btnSearchName = new JButton("Por Nome");
+        JButton btnSearchEmail = new JButton("Por Email");
+        JButton btnSearchTag = new JButton("Por Tag");
+        JButton btnListAll = new JButton("Listar Todos");
 
-        panelTable.add(searchPanel, "North");
-        this.add(panelTable, "Center");
+        // Botões de busca também com estilo azul para harmonia
+        styleButton(btnSearchName);
+        styleButton(btnSearchEmail);
+        styleButton(btnSearchTag);
+        styleButton(btnListAll);
 
-        // Painel inferior - Área de resultados e botões de arquivo
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        JPanel resultsPanel = new JPanel(new BorderLayout());
+        searchPanel.add(btnSearchName);
+        searchPanel.add(btnSearchEmail);
+        searchPanel.add(btnSearchTag);
+        searchPanel.add(btnListAll);
 
-        resultsPanel.setBorder(BorderFactory.createTitledBorder("Mensagens do Sistema"));
-        JScrollPane resultsScrollPane = new JScrollPane(areaResults);
-        resultsPanel.add(resultsScrollPane, BorderLayout.CENTER);
+        centerPanel.add(searchPanel, BorderLayout.NORTH);
+        add(centerPanel, BorderLayout.CENTER);
 
-        JPanel archivesPanel = new JPanel(new FlowLayout());
-        JButton buttonSave = new JButton("Salvar Dados");
-        JButton buttonExport = new JButton("Export CSV");
-        archivesPanel.add(buttonSave);
-        archivesPanel.add(buttonExport);
+        JScrollPane logScroll = new JScrollPane(areaResults);
+        logScroll.setBorder(BorderFactory.createTitledBorder("Log do Sistema"));
+        add(logScroll, BorderLayout.SOUTH);
 
-        bottomPanel.add(resultsPanel, BorderLayout.CENTER);
-        bottomPanel.add(archivesPanel, BorderLayout.SOUTH);
+        btnRegister.addActionListener(e -> registerUser());
+        btnClear.addActionListener(e -> clearFields());
+        buttonUpdate.addActionListener(e -> updateUser());
+        buttonDelete.addActionListener(e -> deleteUser());
+        btnSearchName.addActionListener(e -> searchBy("name"));
+        btnSearchEmail.addActionListener(e -> searchBy("email"));
+        btnSearchTag.addActionListener(e -> searchBy("tag"));
+        btnListAll.addActionListener(e -> updateTable());
 
-        this.add(bottomPanel, BorderLayout.SOUTH);
-
-        // Configurar Event Listeners
-        this.setupButtonListeners (buttonRegister, buttonUpdate, buttonDelete, buttonClean,
-                buttonSearchID, buttonSearchName, buttonSearchEmail, buttonFilter, buttonListAll,
-                buttonSave, buttonExport);
+        buttonUpdate.setEnabled(false);
+        buttonDelete.setEnabled(false);
     }
 
-    private void setupButtonListeners(JButton buttonRegister, JButton buttonUpdate, JButton buttonDelete, JButton buttonClean,
-                                     JButton buttonSearchID,JButton buttonSearchName, JButton buttonSearchEmail, JButton buttonFilter, JButton buttonListAll,
-                                     JButton buttonSave, JButton buttonExport) {
-        buttonRegister.addActionListener(e -> this.registerUser());
-        buttonUpdate.addActionListener(e -> this.updateUser());
-        buttonDelete.addActionListener(e -> this.deleteUser());
-        buttonClean.addActionListener(e -> this.cleanFields());
-
-        buttonSearchID.addActionListener(e -> this.searchByID());
-        buttonSearchName.addActionListener(e -> this.searchByName());
-        buttonSearchEmail.addActionListener(e -> this.searchByEmail());
-        buttonFilter.addActionListener(e -> this.filterUsers());
-        buttonListAll.addActionListener(e -> this.updateTable());
-
-        buttonSave.addActionListener(e -> this.saveData());
-        buttonExport.addActionListener(e -> this.exportCSV());
+    private void styleButton(JButton button) {
+        button.setBackground(PRIMARY_COLOR);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
-    private void setupEventListeners() {
-        // Listener para seleção na tabela
-       this.tableUsers.getSelectionModel().addListSelectionListener(e -> {
-           if (!e.getValueIsAdjusting()) {
-               int selectedRow = this.tableUsers.getSelectedRow();
-               if (selectedRow >= 0) {
-                   this.fillData(selectedRow);
-               }
-           }
-       });
+    private void setupListeners() {
+        tableUsers.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int row = tableUsers.getSelectedRow();
+                buttonUpdate.setEnabled(row >= 0);
+                buttonDelete.setEnabled(row >= 0);
+                if (row >= 0) fillFields(row);
+            }
+        });
     }
 
-    private void fillData(int row) {
-        String id = (String)this.tableUsers.getValueAt(row, 0);
-        User user = this.userService.findUserById(id);
+    private void fillFields(int row) {
+        row = tableUsers.convertRowIndexToModel(row);
+        String id = (String) tableModel.getValueAt(row, 0);
+        User user = userService.findUserById(id);
         if (user != null) {
-            this.fieldName.setText(user.getName());
-            this.fieldEmail.setText(user.getEmail());
-            this.fieldTags.setText(String.join(", ", user.getTags()));
+            fieldName.setText(user.getName());
+            fieldEmail.setText(user.getEmail());
+            fieldTags.setText(String.join(", ", user.getTags()));
         }
     }
 
     private void registerUser() {
         String name = fieldName.getText().trim();
         String email = fieldEmail.getText().trim();
-        String tagsText = fieldTags.getText().trim();
-
-        List<String> tags = Arrays.asList(tagsText.split(","))
-                .stream()
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .collect(Collectors.toList());
+        List<String> tags = Arrays.stream(fieldTags.getText().split(","))
+                .map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
 
         if (userService.addUser(name, email, tags)) {
             updateTable();
-            cleanFields();
-            addMessage("Usuário cadastrado com sucesso!");
+            clearFields();
+            log("Usuário cadastrado com sucesso!");
         } else {
-            addMessage("Erro ao registrar usuário. Verifique os dados inseridos!");
+            log("Erro ao cadastrar usuário. Verifique os dados.");
         }
     }
 
     private void updateUser() {
-        int selectedRow = this.tableUsers.getSelectedRow();
-        if (selectedRow < 0) {
-            this.addMessage("Selecione um contato na tabela para atualizar!");
+        int row = tableUsers.getSelectedRow();
+        if (row < 0) return;
+        row = tableUsers.convertRowIndexToModel(row);
+        String id = (String) tableModel.getValueAt(row, 0);
+        String name = fieldName.getText().trim();
+        String email = fieldEmail.getText().trim();
+        List<String> tags = Arrays.stream(fieldTags.getText().split(","))
+                .map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+
+        if (userService.updateUser(id, name, email, tags)) {
+            updateTable();
+            clearFields();
+            log("Usuário atualizado com sucesso!");
         } else {
-            String id = (String)this.tableUsers.getValueAt(selectedRow, 0);
-            String name = this.fieldName.getText().trim();
-            String email = this.fieldEmail.getText().trim();
-            String tagsText = this.fieldTags.getText().trim();
-            List<String> tags = (List)Arrays.asList(tagsText.split(",")).stream().map(String::trim).filter((s) -> !s.isEmpty()).collect(Collectors.toList());
-            if (this.userService.updateUser(id, name, email, tags)) {
-                this.updateTable();
-                this.cleanFields();
-                this.addMessage("Usuario atualizado com sucesso!");
-            } else {
-                this.addMessage("Erro ao atualizar contato. Verifique os dados inseridos.");
-            }
+            log("Erro ao atualizar usuário.");
         }
     }
 
     private void deleteUser() {
-        int selectedRow = this.tableUsers.getSelectedRow();
-        if (selectedRow < 0) {
-            this.addMessage("Selecione um usuário na tabela para deletar");
+        int row = tableUsers.getSelectedRow();
+        if (row < 0) return;
+        row = tableUsers.convertRowIndexToModel(row);
+        String id = (String) tableModel.getValueAt(row, 0);
+
+        if (userService.deleteUser(id)) {
+            updateTable();
+            clearFields();
+            log("Usuário removido com sucesso.");
         } else {
-            String id = (String)this.tableModel.getValueAt(selectedRow, 0);
-            String name = (String)this.tableModel.getValueAt(selectedRow, 1);
-
-            int validation = JOptionPane.showConfirmDialog(this, "Realmente deseja remover o usuário [" + name + "]?","Validação", JOptionPane.YES_NO_OPTION);
-            if (validation == JOptionPane.YES_OPTION) {
-                if (this.userService.deleteUser(id)) {
-                    this.updateTable();
-                    this.cleanFields();
-                    this.addMessage("Usuario deletado com sucesso!");
-                } else {
-                    this.addMessage("Erro ao remover usuário.");
-                }
-            }
+            log("Erro ao remover usuário.");
         }
-
     }
 
-    private void cleanFields() {
+    private void searchBy(String type) {
+        String query = fieldSearch.getText().trim();
+        if (query.isEmpty()) {
+            log("Digite um valor para buscar.");
+            return;
+        }
+
+        User user = null;
+        List<User> users = null;
+
+        switch (type) {
+            case "name" -> user = userService.findUserByName(query);
+            case "email" -> user = userService.findUserByEmail(query);
+            case "tag" -> users = userService.filterByTag(List.of(query));
+        }
+
+        if (user != null) {
+            showUsers(List.of(user));
+            log("Usuário encontrado: " + user.getName());
+        } else if (users != null && !users.isEmpty()) {
+            showUsers(users);
+            log("" + users.size() + " usuário(s) com a tag encontrada(s).");
+        } else {
+            log("Nenhum resultado encontrado.");
+        }
+    }
+
+    private void clearFields() {
         fieldName.setText("");
         fieldEmail.setText("");
         fieldTags.setText("");
         tableUsers.clearSelection();
     }
 
-    private void addMessage(String message) {
-        areaResults.append(message + "\n");
+    private void log(String msg) {
+        areaResults.append(msg + "\n");
         areaResults.setCaretPosition(areaResults.getDocument().getLength());
     }
 
-    private void searchByID() {
-        String id = fieldSearch.getText().trim();
-        if (id.isEmpty()) {
-            addMessage("Digite um ID para buscar");
-            return;
-        }
-
-        User user = userService.findUserById(id);
-        if (user != null) {
-            showUser(user);
-            addMessage("Usuário encontrado: " + user.getName());
-        } else {
-            addMessage("Usuário com ID: " + id + " não encontrado.");
-        }
-    }
-
-    private void searchByName() {
-        String name = fieldSearch.getText().trim();
-        if (name.isEmpty()) {
-            addMessage("Digite um nome para buscar");
-            return;
-        }
-
-        User user = userService.findUserByName(name);
-        if (user != null) {
-            showUser(user);
-            addMessage("Usuário encontrado: " + user.getName());
-        } else {
-            addMessage("Usuário com nome: " + name + " não encontrado.");
-        }
-    }
-
-
-
-    private void searchByEmail() {
-        String email = fieldSearch.getText().trim();
-        if (email.isEmpty()) {
-            addMessage("Digite um email para buscar");
-            return;
-        }
-
-        User user = userService.findUserByEmail(email);
-        if (user != null) {
-            showUser(user);
-            addMessage("Usuário encontrado: " + user.getName());
-        } else {
-            addMessage("Usuário com Email: " + email + " não encontrado.");
-        }
-    }
-
-    private void filterUsers() {
-        String tagsText = this.fieldSearch.getText().trim();
-
-        if (tagsText.isEmpty()) {
-            this.addMessage("Digite uma tag para buscar");
-        } else {
-            List<String> tags = (List)Arrays.asList(tagsText.split(",")).stream().map(String::trim).filter((s) -> !s.isEmpty()).collect(Collectors.toList());
-            List<User> filteredUsers = this.userService.filterByTag(tags);
-            this.showUser(filteredUsers);
-            this.addMessage("Segmentação concluida com sucesso! " + filteredUsers.size() + " usuários encontrados.");
-        }
-
-    }
-
-    private void showUser(User user) {
-        tableModel.setRowCount(0);
-        Object[] row = {
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                String.join(", ", user.getTags()),
-        };
-        tableModel.addRow(row);
-    }
-
-    private void showUser(List<User> users) {
-        tableModel.setRowCount(0);
-        for (User user : users) {
-            Object[] row = {
-                    user.getId(),
-                    user.getName(),
-                    user.getEmail(),
-                    String.join(", ", user.getTags()),
-            };
-            tableModel.addRow(row);
-        }
-    }
-
     private void updateTable() {
-        List<User> users = userService.findAllUsers();
-        showUser(users);
-        addMessage("lista atualizada com sucesso!");
+        showUsers(userService.findAllUsers());
+        log("Lista atualizada.");
     }
 
-    private void saveData() {
-        FileHandler.saveUsers(userService.findAllUsers());
-        addMessage("Dados salvos com sucesso!");
-    }
-
-    private void exportCSV() {
-        String fileName = JOptionPane.showInputDialog(
-                this,
-                "Nome do arquivo CSV:",
-                "usuarios_exportados.csv"
-        );
-
-        if (fileName != null && !fileName.trim().isEmpty()) {
-            FileHandler.exportUsers(this.userService.findAllUsers(), fileName);
-            this.addMessage("Dados exportados com sucesso para " + fileName);
+    private void showUsers(List<User> users) {
+        tableModel.setRowCount(0);
+        for (User u : users) {
+            tableModel.addRow(new Object[]{u.getId(), u.getName(), u.getEmail(), String.join(", ", u.getTags())});
         }
     }
 
-    public static void main(String args[]) throws IOException {
-        SwingUtilities.invokeLater(() -> {
-            new GUI().setVisible(true);
-        });
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new GUI().setVisible(true));
     }
 }
