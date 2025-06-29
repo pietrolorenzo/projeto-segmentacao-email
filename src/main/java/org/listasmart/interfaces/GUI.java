@@ -18,6 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,9 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import org.listasmart.User;
@@ -43,10 +42,9 @@ public class GUI extends JFrame {
     private JTextArea areaResults;
     private JButton buttonUpdate, buttonDelete;
 
-    private final Color PRIMARY_COLOR = new Color(21, 150, 207); // DodgerBlue
+    private final Color PRIMARY_COLOR = new Color(50, 90, 180); // azul mais vivo para botões
     private final Color SECONDARY_COLOR = new Color(240, 245, 250);
     private final Color HIGHLIGHT_COLOR = new Color(200, 230, 255);
-    private final Color DIVIDER_COLOR = new Color(200, 200, 200);
 
     public GUI() {
         List<User> defaultUsers = FileHandler.loadUsers();
@@ -91,26 +89,14 @@ public class GUI extends JFrame {
                 return c;
             }
         };
-
-        // Define cor da linha divisória fina e padrão
-        tableUsers.setShowGrid(true);
-        tableUsers.setGridColor(DIVIDER_COLOR);
         tableUsers.setRowHeight(36);
         tableUsers.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-
-        JTableHeader header = tableUsers.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        header.setBackground(PRIMARY_COLOR);
-        header.setForeground(Color.WHITE);
-
-        // Alinhar colunas (exemplo: ID centralizado)
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tableUsers.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-
+        tableUsers.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         tableUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableUsers.setFillsViewportHeight(true);
         tableUsers.setAutoCreateRowSorter(true);
+        tableUsers.setShowGrid(true);
+        tableUsers.setGridColor(new Color(200, 200, 200)); // linha divisória cinza clara
 
         areaResults = new JTextArea(6, 30);
         areaResults.setEditable(false);
@@ -149,7 +135,6 @@ public class GUI extends JFrame {
         buttonUpdate = new JButton("Atualizar");
         buttonDelete = new JButton("Excluir");
 
-        // Aplica estilo azul nos botões
         styleButton(btnRegister);
         styleButton(btnClear);
         styleButton(buttonUpdate);
@@ -176,7 +161,6 @@ public class GUI extends JFrame {
         JButton btnSearchTag = new JButton("Por Tag");
         JButton btnListAll = new JButton("Listar Todos");
 
-        // Botões de busca também com estilo azul para harmonia
         styleButton(btnSearchName);
         styleButton(btnSearchEmail);
         styleButton(btnSearchTag);
@@ -190,10 +174,28 @@ public class GUI extends JFrame {
         centerPanel.add(searchPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
 
+        JPanel bottomPanel = new JPanel(new BorderLayout(10, 10));
+        bottomPanel.setBorder(new EmptyBorder(10, 15, 10, 15));
+
         JScrollPane logScroll = new JScrollPane(areaResults);
         logScroll.setBorder(BorderFactory.createTitledBorder("Log do Sistema"));
-        add(logScroll, BorderLayout.SOUTH);
+        bottomPanel.add(logScroll, BorderLayout.CENTER);
 
+        JPanel archiveButtonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton btnSave = new JButton("Salvar Dados");
+        JButton btnExport = new JButton("Export CSV");
+
+        styleButton(btnSave);
+        styleButton(btnExport);
+
+        archiveButtonsPanel.add(btnSave);
+        archiveButtonsPanel.add(btnExport);
+
+        bottomPanel.add(archiveButtonsPanel, BorderLayout.SOUTH);
+
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // Listeners dos botões
         btnRegister.addActionListener(e -> registerUser());
         btnClear.addActionListener(e -> clearFields());
         buttonUpdate.addActionListener(e -> updateUser());
@@ -202,6 +204,8 @@ public class GUI extends JFrame {
         btnSearchEmail.addActionListener(e -> searchBy("email"));
         btnSearchTag.addActionListener(e -> searchBy("tag"));
         btnListAll.addActionListener(e -> updateTable());
+        btnSave.addActionListener(e -> saveData());
+        btnExport.addActionListener(e -> exportCSV());
 
         buttonUpdate.setEnabled(false);
         buttonDelete.setEnabled(false);
@@ -211,8 +215,8 @@ public class GUI extends JFrame {
         button.setBackground(PRIMARY_COLOR);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
         button.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
@@ -335,6 +339,24 @@ public class GUI extends JFrame {
         tableModel.setRowCount(0);
         for (User u : users) {
             tableModel.addRow(new Object[]{u.getId(), u.getName(), u.getEmail(), String.join(", ", u.getTags())});
+        }
+    }
+
+    private void saveData() {
+        FileHandler.saveUsers(userService.findAllUsers());
+        log("Dados salvos com sucesso!");
+    }
+
+    private void exportCSV() {
+        String fileName = JOptionPane.showInputDialog(
+                this,
+                "Nome do arquivo CSV:",
+                "usuarios_exportados.csv"
+        );
+
+        if (fileName != null && !fileName.trim().isEmpty()) {
+            FileHandler.exportUsers(this.userService.findAllUsers(), fileName);
+            log("Dados exportados com sucesso para " + fileName);
         }
     }
 
