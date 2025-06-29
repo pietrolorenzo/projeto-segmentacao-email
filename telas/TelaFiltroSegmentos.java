@@ -32,7 +32,7 @@ public class TelaFiltroSegmentos extends JFrame {
 
         abas.addTab("Filtrar Segmentos", criarAbaFiltroUnificado());
         abas.addTab("Criar Novo Segmento", criarAbaCriarSegmento());
-        abas.addTab("Outros", new JPanel()); // Aba em branco movida para o final com nome padrão
+        abas.addTab("Outros", new JPanel());
 
         add(abas, BorderLayout.CENTER);
     }
@@ -78,13 +78,13 @@ public class TelaFiltroSegmentos extends JFrame {
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.INFORMATION_MESSAGE,
                             null,
-                            new String[]{"Editar", "Ver E-mails", "Fechar"}, // Botões em ordem
+                            new String[]{"Editar", "Ver E-mails", "Fechar"},
                             "Fechar"
                     );
 
-                    if (option == 0) { // Editar
+                    if (option == 0) {
                         editarSegmento(seg, index);
-                    } else if (option == 1) { // Ver E-mails
+                    } else if (option == 1) {
                         new TelaListaEmails(seg.getNome()).setVisible(true);
                     }
                 }
@@ -134,8 +134,8 @@ public class TelaFiltroSegmentos extends JFrame {
         gbc.gridx = 0; gbc.gridy = 2; painel.add(new JLabel("Status:"), gbc);
         gbc.gridx = 1; painel.add(comboStatus, gbc);
 
-        // Cria um painel com os botões personalizados (AGORA SÓ TEM "SALVAR" E "CANCELAR")
-        Object[] opcoes = {"Salvar", "Cancelar"}; // Removi "Ver E-mails"
+
+        Object[] opcoes = {"Salvar", "Cancelar"};
         int opcao = JOptionPane.showOptionDialog(
                 this,
                 painel,
@@ -144,11 +144,11 @@ public class TelaFiltroSegmentos extends JFrame {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 opcoes,
-                opcoes[0] // Botão padrão (Salvar)
+                opcoes[0]
         );
 
-// Remove a verificação do "Ver E-mails" (opção == 1 não existe mais)
-        if (opcao == 0) { // Se clicou em "Salvar"
+
+        if (opcao == 0) {
             String novoNome = campoNome.getText().trim();
             String novaDescricao = campoDescricao.getText().trim();
             String novoStatus = (String) comboStatus.getSelectedItem();
@@ -161,7 +161,7 @@ public class TelaFiltroSegmentos extends JFrame {
 
             todosSegmentos.set(index, new TelaSegmentacao.Segmento(novoNome, novaDescricao, novoStatus));
 
-            atualizarTabela(todosSegmentos); // Atualiza a tabela
+            atualizarTabela(todosSegmentos);
         }
 
         if (opcao == JOptionPane.OK_OPTION) {
@@ -240,7 +240,7 @@ public class TelaFiltroSegmentos extends JFrame {
             }
 
             TelaSegmentacao.Segmento novo = new TelaSegmentacao.Segmento(nome, desc, status);
-            todosSegmentos.add(novo);
+            boolean add = todosSegmentos.add(novo);
             atualizarTabela(todosSegmentos);
 
             JOptionPane.showMessageDialog(this, "Segmento adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -281,23 +281,16 @@ public class TelaFiltroSegmentos extends JFrame {
 
     public static void main(String[] args) {
         List<TelaSegmentacao.Segmento> segmentosMock = new ArrayList<>();
-        segmentosMock.add(new TelaSegmentacao.Segmento("Inativos", "Clientes sem atividade recente", "Inativo"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Fieis", "Clientes com 5+ compras", "Pronto para enviar"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Novos", "Clientes cadastrados há menos de 30 dias", "Em rascunho"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Alta Renda", "Clientes com ticket médio acima de R$500", "Pronto para enviar"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Estudantes", "Clientes com e-mail acadêmico", "Pronto para enviar"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Idosos", "Clientes com mais de 60 anos", "Inativo"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Promo Fevereiro", "Segmento para campanha de fevereiro", "Em rascunho"));
         segmentosMock.add(new TelaSegmentacao.Segmento("Clientes SP", "Clientes localizados em São Paulo", "Pronto para enviar"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Teste Interno", "Segmento usado em testes de equipe", "Inativo"));
-        segmentosMock.add(new TelaSegmentacao.Segmento("Frete Grátis", "Clientes elegíveis para frete grátis", "Pronto para enviar"));
+        segmentosMock.add(new TelaSegmentacao.Segmento("Inativos", "Sem atividade há 6 meses", "Inativo"));
+        segmentosMock.add(new TelaSegmentacao.Segmento("Promo Fevereiro", "Segmento para campanha de fevereiro", "Em rascunho"));
 
         SwingUtilities.invokeLater(() -> new TelaFiltroSegmentos(segmentosMock).setVisible(true));
     }
 }
 class TelaListaEmails extends JFrame {
-    private DefaultTableModel modeloTabela;
-    private JTable tabelaEmails;
+    private final DefaultTableModel modeloTabela;
+    private final JTable tabelaEmails;
     private String nomeSegmento;
 
     public TelaListaEmails(String nomeSegmento) {
@@ -307,11 +300,11 @@ class TelaListaEmails extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // Modelo da tabela
+
         modeloTabela = new DefaultTableModel(new Object[]{"Nome", "E-mail", "Telefone"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Impede edição direta na célula
+                return false;
             }
         };
 
@@ -319,25 +312,25 @@ class TelaListaEmails extends JFrame {
         tabelaEmails.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scroll = new JScrollPane(tabelaEmails);
 
-        // Botões de ação
+
         JButton btnAdicionar = new JButton("Adicionar E-mail");
         JButton btnEditar = new JButton("Editar");
         JButton btnExcluir = new JButton("Excluir");
 
-        // Painel de botões
+
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         painelBotoes.add(btnAdicionar);
         painelBotoes.add(btnEditar);
         painelBotoes.add(btnExcluir);
 
-        // Adiciona componentes à janela
+
         add(scroll, BorderLayout.CENTER);
         add(painelBotoes, BorderLayout.SOUTH);
 
-        // Carrega dados iniciais (simulados)
+
         carregarEmailsMock();
 
-        // Listeners dos botões
+
         btnAdicionar.addActionListener(e -> adicionarEmail());
         btnEditar.addActionListener(e -> editarEmail());
         btnExcluir.addActionListener(e -> excluirEmail());

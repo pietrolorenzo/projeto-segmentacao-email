@@ -3,6 +3,8 @@ package telas;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class TelaLogin extends JFrame {
 
@@ -89,11 +91,21 @@ public class TelaLogin extends JFrame {
             String usuario = txtUsuario.getText();
             String senha = new String(txtSenha.getPassword());
 
+
             if (usuario.equals("admin") && senha.equals("1234")) {
-                JOptionPane.showMessageDialog(null, "Login bem-sucedido!");
+
                 dispose();
+
+                List<TelaSegmentacao.Segmento> segmentosMock = new ArrayList<>();
+                segmentosMock.add(new TelaSegmentacao.Segmento("Clientes SP", "Clientes localizados em São Paulo", "Pronto para enviar"));
+                segmentosMock.add(new TelaSegmentacao.Segmento("Inativos", "Sem atividade há 6 meses", "Inativo"));
+                segmentosMock.add(new TelaSegmentacao.Segmento("Promo Fevereiro", "Segmento para campanha de fevereiro", "Em rascunho"));
+
+                SwingUtilities.invokeLater(() -> {
+                    new TelaFiltroSegmentos(segmentosMock).setVisible(true);
+                });
             } else {
-                JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos.");
+                JOptionPane.showMessageDialog(null, "Usuário ou senha incorretos!", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         });
 
