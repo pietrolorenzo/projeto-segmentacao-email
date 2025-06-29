@@ -319,3 +319,4 @@ public class TelaSegmentacao extends JFrame {
         SwingUtilities.invokeLater(() -> new TelaSegmentacao().setVisible(true));
     }
 }
+

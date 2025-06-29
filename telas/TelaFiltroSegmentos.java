@@ -71,7 +71,6 @@ public class TelaFiltroSegmentos extends JFrame {
                     int index = tabelaSegmentos.getSelectedRow();
                     TelaSegmentacao.Segmento seg = todosSegmentos.get(index);
 
-                    // Aqui você pode trocar esse JOptionPane por uma tela própria para editar/excluir
                     int option = JOptionPane.showOptionDialog(
                             null,
                             "Nome: " + seg.getNome() + "\nDescrição: " + seg.getDescricao() + "\nStatus: " + seg.getStatus(),
@@ -79,12 +78,14 @@ public class TelaFiltroSegmentos extends JFrame {
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.INFORMATION_MESSAGE,
                             null,
-                            new String[]{"Editar", "Fechar"},
+                            new String[]{"Editar", "Ver E-mails", "Fechar"}, // Botões em ordem
                             "Fechar"
                     );
 
                     if (option == 0) { // Editar
                         editarSegmento(seg, index);
+                    } else if (option == 1) { // Ver E-mails
+                        new TelaListaEmails(seg.getNome()).setVisible(true);
                     }
                 }
             }
@@ -133,7 +134,35 @@ public class TelaFiltroSegmentos extends JFrame {
         gbc.gridx = 0; gbc.gridy = 2; painel.add(new JLabel("Status:"), gbc);
         gbc.gridx = 1; painel.add(comboStatus, gbc);
 
-        int opcao = JOptionPane.showConfirmDialog(this, painel, "Editar Segmento", JOptionPane.OK_CANCEL_OPTION);
+        // Cria um painel com os botões personalizados (AGORA SÓ TEM "SALVAR" E "CANCELAR")
+        Object[] opcoes = {"Salvar", "Cancelar"}; // Removi "Ver E-mails"
+        int opcao = JOptionPane.showOptionDialog(
+                this,
+                painel,
+                "Editar Segmento",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                opcoes,
+                opcoes[0] // Botão padrão (Salvar)
+        );
+
+// Remove a verificação do "Ver E-mails" (opção == 1 não existe mais)
+        if (opcao == 0) { // Se clicou em "Salvar"
+            String novoNome = campoNome.getText().trim();
+            String novaDescricao = campoDescricao.getText().trim();
+            String novoStatus = (String) comboStatus.getSelectedItem();
+
+            if (novoNome.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "O nome não pode ficar vazio.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+
+            todosSegmentos.set(index, new TelaSegmentacao.Segmento(novoNome, novaDescricao, novoStatus));
+
+            atualizarTabela(todosSegmentos); // Atualiza a tabela
+        }
 
         if (opcao == JOptionPane.OK_OPTION) {
             String novoNome = campoNome.getText().trim();
@@ -148,6 +177,7 @@ public class TelaFiltroSegmentos extends JFrame {
             todosSegmentos.set(index, segmento);
             atualizarTabela(todosSegmentos);
         }
+
     }
 
     private JPanel criarAbaCriarSegmento() {
@@ -265,3 +295,140 @@ public class TelaFiltroSegmentos extends JFrame {
         SwingUtilities.invokeLater(() -> new TelaFiltroSegmentos(segmentosMock).setVisible(true));
     }
 }
+class TelaListaEmails extends JFrame {
+    private DefaultTableModel modeloTabela;
+    private JTable tabelaEmails;
+    private String nomeSegmento;
+
+    public TelaListaEmails(String nomeSegmento) {
+        this.nomeSegmento = nomeSegmento;
+        setTitle("Gerenciar E-mails do Segmento: " + nomeSegmento);
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
+
+        // Modelo da tabela
+        modeloTabela = new DefaultTableModel(new Object[]{"Nome", "E-mail", "Telefone"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Impede edição direta na célula
+            }
+        };
+
+        tabelaEmails = new JTable(modeloTabela);
+        tabelaEmails.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        JScrollPane scroll = new JScrollPane(tabelaEmails);
+
+        // Botões de ação
+        JButton btnAdicionar = new JButton("Adicionar E-mail");
+        JButton btnEditar = new JButton("Editar");
+        JButton btnExcluir = new JButton("Excluir");
+
+        // Painel de botões
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        painelBotoes.add(btnAdicionar);
+        painelBotoes.add(btnEditar);
+        painelBotoes.add(btnExcluir);
+
+        // Adiciona componentes à janela
+        add(scroll, BorderLayout.CENTER);
+        add(painelBotoes, BorderLayout.SOUTH);
+
+        // Carrega dados iniciais (simulados)
+        carregarEmailsMock();
+
+        // Listeners dos botões
+        btnAdicionar.addActionListener(e -> adicionarEmail());
+        btnEditar.addActionListener(e -> editarEmail());
+        btnExcluir.addActionListener(e -> excluirEmail());
+    }
+
+    private void carregarEmailsMock() {
+        // Dados mockados (substitua por sua lógica real)
+        modeloTabela.addRow(new Object[]{"João Silva", "joao@exemplo.com", "(11) 9999-8888"});
+        modeloTabela.addRow(new Object[]{"Maria Souza", "maria@exemplo.com", "(11) 7777-6666"});
+    }
+
+    private void adicionarEmail() {
+        JTextField campoNome = new JTextField();
+        JTextField campoEmail = new JTextField();
+        JTextField campoTelefone = new JTextField();
+
+        JPanel painel = new JPanel(new GridLayout(3, 2, 5, 5));
+        painel.add(new JLabel("Nome:"));
+        painel.add(campoNome);
+        painel.add(new JLabel("E-mail:"));
+        painel.add(campoEmail);
+        painel.add(new JLabel("Telefone:"));
+        painel.add(campoTelefone);
+
+        int opcao = JOptionPane.showConfirmDialog(
+                this,
+                painel,
+                "Adicionar E-mail",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (opcao == JOptionPane.OK_OPTION) {
+            modeloTabela.addRow(new Object[]{
+                    campoNome.getText().trim(),
+                    campoEmail.getText().trim(),
+                    campoTelefone.getText().trim()
+            });
+        }
+    }
+
+    private void editarEmail() {
+        int linhaSelecionada = tabelaEmails.getSelectedRow();
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um e-mail para editar!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JTextField campoNome = new JTextField(tabelaEmails.getValueAt(linhaSelecionada, 0).toString());
+        JTextField campoEmail = new JTextField(tabelaEmails.getValueAt(linhaSelecionada, 1).toString());
+        JTextField campoTelefone = new JTextField(tabelaEmails.getValueAt(linhaSelecionada, 2).toString());
+
+        JPanel painel = new JPanel(new GridLayout(3, 2, 5, 5));
+        painel.add(new JLabel("Nome:"));
+        painel.add(campoNome);
+        painel.add(new JLabel("E-mail:"));
+        painel.add(campoEmail);
+        painel.add(new JLabel("Telefone:"));
+        painel.add(campoTelefone);
+
+        int opcao = JOptionPane.showConfirmDialog(
+                this,
+                painel,
+                "Editar E-mail",
+                JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (opcao == JOptionPane.OK_OPTION) {
+            modeloTabela.setValueAt(campoNome.getText().trim(), linhaSelecionada, 0);
+            modeloTabela.setValueAt(campoEmail.getText().trim(), linhaSelecionada, 1);
+            modeloTabela.setValueAt(campoTelefone.getText().trim(), linhaSelecionada, 2);
+        }
+    }
+
+    private void excluirEmail() {
+        int linhaSelecionada = tabelaEmails.getSelectedRow();
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um e-mail para excluir!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirmacao = JOptionPane.showConfirmDialog(
+                this,
+                "Tem certeza que deseja excluir este e-mail?",
+                "Confirmação",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacao == JOptionPane.YES_OPTION) {
+            modeloTabela.removeRow(linhaSelecionada);
+        }
+    }
+}
+
+
