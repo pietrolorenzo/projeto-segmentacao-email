@@ -88,7 +88,7 @@ java -cp bin org.listasmart.Main
 ** Arthur Silva **
 
 - [GitHub](https://github.com/Artthorius)
-- [LinkedIn](www.linkedin.com/in/arthur-oliveira-84087030)
+- [LinkedIn](https://www.linkedin.com/in/arthurrsilva/)
 - Email: [arthusilva1648@gmail.com](mailto\:arthursilva1648@gmail.com)
 
 ** Pietro Lorenzo ** 
