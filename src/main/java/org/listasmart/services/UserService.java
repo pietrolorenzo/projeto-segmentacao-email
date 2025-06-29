@@ -69,6 +69,13 @@ public class UserService {
         return usersMap.get(id);
     }
 
+    public User findUserByName(String name) {
+        return usersList.stream()
+                .filter(u -> u.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
+    }
+
     // Buscar usuário pelo Email
     public User findUserByEmail(String email) {
         return usersList.stream()

@@ -37,7 +37,7 @@ public class GUI extends JFrame {
 
         this.setTitle("Sistema de Gerenciamento de Usuários");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(900, 700);
+        this.setSize(1000, 700);
         this.setLocationRelativeTo(null);
     }
 
@@ -120,11 +120,13 @@ public class GUI extends JFrame {
         searchPanel.add(new JLabel("Buscar/Filtrar"));
         searchPanel.add(this.fieldSearch);
         JButton buttonSearchID = new JButton("Buscar por ID");
+        JButton buttonSearchName = new JButton("Buscar por Nome");
         JButton buttonSearchEmail = new JButton("Buscar por Email");
         JButton buttonFilter = new JButton("Segmentar por Tags");
         JButton buttonListAll = new JButton("Listar todos");
 
         searchPanel.add(buttonSearchID);
+        searchPanel.add(buttonSearchName);
         searchPanel.add(buttonSearchEmail);
         searchPanel.add(buttonFilter);
         searchPanel.add(buttonListAll);
@@ -153,12 +155,12 @@ public class GUI extends JFrame {
 
         // Configurar Event Listeners
         this.setupButtonListeners (buttonRegister, buttonUpdate, buttonDelete, buttonClean,
-                buttonSearchID, buttonSearchEmail, buttonFilter, buttonListAll,
+                buttonSearchID, buttonSearchName, buttonSearchEmail, buttonFilter, buttonListAll,
                 buttonSave, buttonExport);
     }
 
     private void setupButtonListeners(JButton buttonRegister, JButton buttonUpdate, JButton buttonDelete, JButton buttonClean,
-                                     JButton buttonSearchID, JButton buttonSearchEmail, JButton buttonFilter, JButton buttonListAll,
+                                     JButton buttonSearchID,JButton buttonSearchName, JButton buttonSearchEmail, JButton buttonFilter, JButton buttonListAll,
                                      JButton buttonSave, JButton buttonExport) {
         buttonRegister.addActionListener(e -> this.registerUser());
         buttonUpdate.addActionListener(e -> this.updateUser());
@@ -166,6 +168,7 @@ public class GUI extends JFrame {
         buttonClean.addActionListener(e -> this.cleanFields());
 
         buttonSearchID.addActionListener(e -> this.searchByID());
+        buttonSearchName.addActionListener(e -> this.searchByName());
         buttonSearchEmail.addActionListener(e -> this.searchByEmail());
         buttonFilter.addActionListener(e -> this.filterUsers());
         buttonListAll.addActionListener(e -> this.updateTable());
@@ -285,6 +288,24 @@ public class GUI extends JFrame {
             addMessage("Usuário com ID: " + id + " não encontrado.");
         }
     }
+
+    private void searchByName() {
+        String name = fieldSearch.getText().trim();
+        if (name.isEmpty()) {
+            addMessage("Digite um nome para buscar");
+            return;
+        }
+
+        User user = userService.findUserByName(name);
+        if (user != null) {
+            showUser(user);
+            addMessage("Usuário encontrado: " + user.getName());
+        } else {
+            addMessage("Usuário com nome: " + name + " não encontrado.");
+        }
+    }
+
+
 
     private void searchByEmail() {
         String email = fieldSearch.getText().trim();
