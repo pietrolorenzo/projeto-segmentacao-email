@@ -1,12 +1,50 @@
 package org.listasmart.interfaces;
 
-import java.awt.*; import java.awt.event.ActionEvent; import java.util.Arrays; import java.util.List; import java.util.stream.Collectors;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.swing.*; import javax.swing.border.EmptyBorder; import javax.swing.table.DefaultTableModel; import javax.swing.table.TableCellRenderer;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
-import org.listasmart.User; import org.listasmart.services.FileHandler; import org.listasmart.services.UserService;
+import org.listasmart.User;
+import org.listasmart.services.FileHandler;
+import org.listasmart.services.UserService;
 
-public class GUI extends JFrame { private UserService userService; private JTable tableUsers; private DefaultTableModel tableModel; private JTextField fieldName, fieldEmail, fieldTags, fieldSearch; private JTextArea areaResults; private JButton buttonUpdate, buttonDelete; private JLabel resultCountLabel;
+public class GUI extends JFrame {
+    private UserService userService;
+    private JTable tableUsers;
+    private DefaultTableModel tableModel;
+    private JTextField fieldName, fieldEmail, fieldTags, fieldSearch;
+    private JTextArea areaResults;
+    private JButton buttonUpdate, buttonDelete;
+    private JLabel resultCountLabel;
 
     private final Color PRIMARY_COLOR = new Color(50, 90, 180);
     private final Color SECONDARY_COLOR = new Color(240, 245, 250);
@@ -271,39 +309,40 @@ public class GUI extends JFrame { private UserService userService; private JTabl
     }
 
     private void searchBy(String type) {
-        String query = fieldSearch.getText().trim();
+        String query = fieldSearch.getText().trim().toLowerCase();
         if (query.isEmpty()) {
             log("Digite um valor para buscar.");
             return;
         }
 
-        User user = null;
-        List<User> users = null;
-
+        List<User> users;
         switch (type) {
-            case "name" -> user = userService.findUserByName(query);
-            case "id" -> user = userService.findUserById(query);
-            case "email" -> user = userService.findUserByEmail(query);
+            case "id" -> {
+                User user = userService.findUserById(query);
+                users = user != null ? List.of(user) : List.of();
+            }
+            case "name" -> users = userService.findAllUsers().stream()
+                    .filter(u -> u.getName().toLowerCase().contains(query))
+                    .collect(Collectors.toList());
+            case "email" -> users = userService.findAllUsers().stream()
+                    .filter(u -> u.getEmail().toLowerCase().contains(query))
+                    .collect(Collectors.toList());
             case "segmento" -> {
                 List<String> tags = Arrays.stream(query.split(","))
-                        .map(String::trim)
-                        .filter(s -> !s.isEmpty())
-                        .collect(Collectors.toList());
+                        .map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
                 users = userService.filterByTag(tags);
             }
+            default -> users = List.of();
         }
 
-        if (user != null) {
-            showUsers(List.of(user));
-            log("Usuário encontrado: " + user.getName());
-            resultCountLabel.setText("Resultados: 1");
-        } else if (users != null && !users.isEmpty()) {
+        if (!users.isEmpty()) {
             showUsers(users);
-            log(users.size() + " usuário(s) com o(s) segmento(s) encontrado(s).\n");
             resultCountLabel.setText("Resultados: " + users.size());
+            log("Foram encontrados " + users.size() + " resultado(s).");
         } else {
-            log("Nenhum resultado encontrado.");
+            showUsers(List.of());
             resultCountLabel.setText("Resultados: 0");
+            log("Nenhum resultado encontrado.");
         }
     }
 
@@ -337,12 +376,7 @@ public class GUI extends JFrame { private UserService userService; private JTabl
     }
 
     private void exportCSV() {
-        String fileName = JOptionPane.showInputDialog(
-                this,
-                "Nome do arquivo CSV:",
-                "usuarios_exportados.csv"
-        );
-
+        String fileName = JOptionPane.showInputDialog(this, "Nome do arquivo CSV:", "usuarios_exportados.csv");
         if (fileName != null && !fileName.trim().isEmpty()) {
             FileHandler.exportUsers(this.userService.findAllUsers(), fileName);
             log("Dados exportados com sucesso para " + fileName);
@@ -352,5 +386,4 @@ public class GUI extends JFrame { private UserService userService; private JTabl
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new GUI().setVisible(true));
     }
-
 }

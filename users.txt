@@ -1,200 +1,101 @@
-1|Mariana Souza|mariana.souza1@gmail.com|rh, gestao, financeiro
-2|Lashyvia Azevedo|lashivia.azevedo2@gmail.com|cozinha
-3|Isabela Gomes|isabela.gomes3@gmail.com|marketing, juridico
-4|Lucas Almeida|lucas.almeida4@gmail.com|rh, dev, vendas
-5|Gustavo Lima|gustavo.lima5@gmail.com|financeiro, gestao
-6|Lucas Almeida|lucas.almeida6@gmail.com|suporte
-7|Isabela Gomes|isabela.gomes7@gmail.com|juridico, vendas, marketing
-8|Beatriz Santos|beatriz.santos8@gmail.com|marketing, financeiro
-9|Pedro Henrique|pedro.henrique9@gmail.com|gestao, operacoes, dev
-10|Julia Ramos|julia.ramos10@gmail.com|vendas
-11|Sofia Pires|sofia.pires11@gmail.com|gestao, adm
-12|Mateus Carvalho|mateus.carvalho12@gmail.com|engenheiro, vendas, logistica
-13|Ana Clara|ana.clara13@gmail.com|vendas, dev, rh
-14|Gustavo Lima|gustavo.lima14@gmail.com|suporte, rh
-15|Mariana Souza|mariana.souza15@gmail.com|cozinha, logistica
-16|Isabela Gomes|isabela.gomes16@gmail.com|juridico, gestao, logistica
-17|Caio Duarte|caio.duarte17@gmail.com|marketing, rh
-18|Mariana Souza|mariana.souza18@gmail.com|marketing, rh
-19|Pedro Henrique|pedro.henrique19@gmail.com|vendas, dev, rh
-20|Pedro Henrique|pedro.henrique20@gmail.com|dev, juridico, rh
-21|Julia Ramos|julia.ramos21@gmail.com|cozinha, marketing
-22|JoÃ£o Pedro|joÃ£o.pedro22@gmail.com|vendas
-23|Felipe Martins|felipe.martins23@gmail.com|logistica, marketing
-24|Mateus Carvalho|mateus.carvalho24@gmail.com|cozinha, financeiro
-25|Beatriz Santos|beatriz.santos25@gmail.com|suporte, marketing
-26|Felipe Martins|felipe.martins26@gmail.com|engenheiro, logistica, marketing
-27|Gabriel Fernandes|gabriel.fernandes27@gmail.com|vendas
-28|Gustavo Lima|gustavo.lima28@gmail.com|marketing
-29|Beatriz Santos|beatriz.santos29@gmail.com|rh, juridico, logistica
-30|Helena Barros|helena.barros30@gmail.com|rh
-31|Gustavo Lima|gustavo.lima31@gmail.com|marketing, cozinha
-32|JoÃ£o Pedro|joÃ£o.pedro32@gmail.com|vendas
-33|Mariana Souza|mariana.souza33@gmail.com|juridico, marketing, financeiro
-34|Camila Rocha|camila.rocha34@gmail.com|dev, juridico, operacoes
-35|Julia Ramos|julia.ramos35@gmail.com|operacoes, marketing, dev
-36|Mateus Carvalho|mateus.carvalho36@gmail.com|marketing, gestao, suporte
-37|Mateus Carvalho|mateus.carvalho37@gmail.com|engenheiro, dev
-38|Laura Costa|laura.costa38@gmail.com|engenheiro, vendas
-39|Gustavo Lima|gustavo.lima39@gmail.com|vendas, cozinha
-40|Pedro Henrique|pedro.henrique40@gmail.com|adm, financeiro
-41|Pedro Henrique|pedro.henrique41@gmail.com|marketing
-42|Caio Duarte|caio.duarte42@gmail.com|logistica, suporte, marketing
-43|Laura Costa|laura.costa43@gmail.com|adm, operacoes, logistica
-44|Caio Duarte|caio.duarte44@gmail.com|adm, operacoes
-45|Gabriel Fernandes|gabriel.fernandes45@gmail.com|operacoes, engenheiro
-46|JoÃ£o Pedro|joÃ£o.pedro46@gmail.com|vendas
-47|Beatriz Santos|beatriz.santos47@gmail.com|rh
-48|Sofia Pires|sofia.pires48@gmail.com|dev
-49|Isabela Gomes|isabela.gomes49@gmail.com|juridico
-50|Gabriel Fernandes|gabriel.fernandes50@gmail.com|engenheiro, gestao
-51|LÃ­via Azevedo|lÃ­via.azevedo51@gmail.com|juridico
-52|Mateus Carvalho|mateus.carvalho52@gmail.com|engenheiro
-53|Laura Costa|laura.costa53@gmail.com|juridico, financeiro, marketing
-54|Gustavo Lima|gustavo.lima54@gmail.com|rh, operacoes
-55|Pedro Henrique|pedro.henrique55@gmail.com|engenheiro, marketing, operacoes
-56|Felipe Martins|felipe.martins56@gmail.com|marketing, juridico, operacoes
-57|Sofia Pires|sofia.pires57@gmail.com|dev, cozinha
-58|LÃ­via Azevedo|lÃ­via.azevedo58@gmail.com|suporte, financeiro, engenheiro
-59|Julia Ramos|julia.ramos59@gmail.com|suporte, financeiro
-60|Gustavo Lima|gustavo.lima60@gmail.com|gestao, vendas, cozinha
-61|Mariana Souza|mariana.souza61@gmail.com|rh, juridico
-62|Rafael Oliveira|rafael.oliveira62@gmail.com|marketing, rh
-63|Camila Rocha|camila.rocha63@gmail.com|gestao, operacoes, suporte
-64|Caio Duarte|caio.duarte64@gmail.com|financeiro, suporte, engenheiro
-65|Thiago Moura|thiago.moura65@gmail.com|suporte
-66|Caio Duarte|caio.duarte66@gmail.com|marketing
-67|JoÃ£o Pedro|joÃ£o.pedro67@gmail.com|juridico, vendas
-68|Sofia Pires|sofia.pires68@gmail.com|adm, operacoes, dev
-69|JoÃ£o Pedro|joÃ£o.pedro69@gmail.com|cozinha
-70|Lucas Almeida|lucas.almeida70@gmail.com|gestao
-71|Helena Barros|helena.barros71@gmail.com|gestao, rh, suporte
-72|Thiago Moura|thiago.moura72@gmail.com|cozinha, logistica, marketing
-73|Pedro Henrique|pedro.henrique73@gmail.com|engenheiro
-74|Gabriel Fernandes|gabriel.fernandes74@gmail.com|dev
-75|Thiago Moura|thiago.moura75@gmail.com|suporte
-76|Ana Clara|ana.clara76@gmail.com|logistica
-77|Thiago Moura|thiago.moura77@gmail.com|dev, suporte
-78|Ana Clara|ana.clara78@gmail.com|juridico
-79|Lucas Almeida|lucas.almeida79@gmail.com|marketing
-80|JoÃ£o Pedro|joÃ£o.pedro80@gmail.com|rh
-81|Julia Ramos|julia.ramos81@gmail.com|operacoes
-82|Julia Ramos|julia.ramos82@gmail.com|cozinha, financeiro, marketing
-83|Ana Clara|ana.clara83@gmail.com|gestao, suporte, rh
-84|Felipe Martins|felipe.martins84@gmail.com|logistica, adm
-85|Lucas Almeida|lucas.almeida85@gmail.com|operacoes, suporte, cozinha
-86|Julia Ramos|julia.ramos86@gmail.com|cozinha, financeiro, adm
-87|Thiago Moura|thiago.moura87@gmail.com|suporte, cozinha, gestao
-88|Caio Duarte|caio.duarte88@gmail.com|suporte, adm, operacoes
-89|LÃ­via Azevedo|lÃ­via.azevedo89@gmail.com|logistica, juridico, adm
-90|Beatriz Santos|beatriz.santos90@gmail.com|marketing
-91|Lucas Almeida|lucas.almeida91@gmail.com|marketing, rh, suporte
-92|Rafael Oliveira|rafael.oliveira92@gmail.com|rh
-93|Sofia Pires|sofia.pires93@gmail.com|operacoes
-94|Sofia Pires|sofia.pires94@gmail.com|engenheiro, logistica, operacoes
-95|Mateus Carvalho|mateus.carvalho95@gmail.com|rh
-96|Laura Costa|laura.costa96@gmail.com|cozinha, engenheiro, logistica
-97|Gustavo Lima|gustavo.lima97@gmail.com|juridico, financeiro
-98|Ana Clara|ana.clara98@gmail.com|rh, juridico
-99|Pedro Henrique|pedro.henrique99@gmail.com|dev
-100|Rafael Oliveira|rafael.oliveira100@gmail.com|dev, cozinha, gestao
-101|Thiago Moura|thiago.moura101@gmail.com|vendas, juridico
-102|Camila Rocha|camila.rocha102@gmail.com|dev
-103|Helena Barros|helena.barros103@gmail.com|dev, suporte
-104|Pedro Henrique|pedro.henrique104@gmail.com|adm
-105|Caio Duarte|caio.duarte105@gmail.com|gestao, marketing, cozinha
-106|Sofia Pires|sofia.pires106@gmail.com|marketing, engenheiro, gestao
-107|Laura Costa|laura.costa107@gmail.com|operacoes
-108|Julia Ramos|julia.ramos108@gmail.com|logistica
-109|LÃ­via Azevedo|lÃ­via.azevedo109@gmail.com|juridico, logistica, adm
-110|Isabela Gomes|isabela.gomes110@gmail.com|logistica, dev, gestao
-111|Thiago Moura|thiago.moura111@gmail.com|rh, marketing
-112|Gabriel Fernandes|gabriel.fernandes112@gmail.com|rh
-113|Mateus Carvalho|mateus.carvalho113@gmail.com|operacoes, rh
-114|Helena Barros|helena.barros114@gmail.com|juridico, rh
-115|Lucas Almeida|lucas.almeida115@gmail.com|vendas
-116|Mariana Souza|mariana.souza116@gmail.com|dev, cozinha
-117|Mateus Carvalho|mateus.carvalho117@gmail.com|engenheiro, juridico
-118|Mariana Souza|mariana.souza118@gmail.com|marketing
-119|Ana Clara|ana.clara119@gmail.com|rh, adm
-120|Mateus Carvalho|mateus.carvalho120@gmail.com|financeiro, gestao
-121|Camila Rocha|camila.rocha121@gmail.com|suporte, logistica
-122|LÃ­via Azevedo|lÃ­via.azevedo122@gmail.com|vendas, marketing, engenheiro
-123|Helena Barros|helena.barros123@gmail.com|financeiro, gestao, cozinha
-124|Gabriel Fernandes|gabriel.fernandes124@gmail.com|operacoes, gestao, dev
-125|Julia Ramos|julia.ramos125@gmail.com|cozinha, adm
-126|Mateus Carvalho|mateus.carvalho126@gmail.com|rh, operacoes
-127|Ana Clara|ana.clara127@gmail.com|vendas, financeiro
-128|Thiago Moura|thiago.moura128@gmail.com|cozinha
-129|Thiago Moura|thiago.moura129@gmail.com|suporte
-130|Thiago Moura|thiago.moura130@gmail.com|marketing, gestao
-131|Felipe Martins|felipe.martins131@gmail.com|adm, juridico, logistica
-132|Julia Ramos|julia.ramos132@gmail.com|financeiro, adm, logistica
-133|Thiago Moura|thiago.moura133@gmail.com|rh
-134|Beatriz Santos|beatriz.santos134@gmail.com|marketing, engenheiro, adm
-135|Julia Ramos|julia.ramos135@gmail.com|suporte, logistica
-136|Sofia Pires|sofia.pires136@gmail.com|suporte
-137|Gabriel Fernandes|gabriel.fernandes137@gmail.com|vendas, dev
-138|Pedro Henrique|pedro.henrique138@gmail.com|operacoes, marketing
-139|Felipe Martins|felipe.martins139@gmail.com|juridico, rh, suporte
-140|LÃ­via Azevedo|lÃ­via.azevedo140@gmail.com|suporte, operacoes, juridico
-141|Laura Costa|laura.costa141@gmail.com|juridico
-142|Mariana Souza|mariana.souza142@gmail.com|dev, operacoes, cozinha
-143|Julia Ramos|julia.ramos143@gmail.com|dev
-144|Sofia Pires|sofia.pires144@gmail.com|financeiro, cozinha
-145|Rafael Oliveira|rafael.oliveira145@gmail.com|vendas, financeiro
-146|Helena Barros|helena.barros146@gmail.com|dev, juridico, operacoes
-147|Ana Clara|ana.clara147@gmail.com|rh, juridico, operacoes
-148|Isabela Gomes|isabela.gomes148@gmail.com|rh, suporte
-149|JoÃ£o Pedro|joÃ£o.pedro149@gmail.com|gestao, logistica, engenheiro
-150|Lucas Almeida|lucas.almeida150@gmail.com|dev
-151|Gabriel Fernandes|gabriel.fernandes151@gmail.com|gestao
-152|Ana Clara|ana.clara152@gmail.com|marketing, logistica, gestao
-153|Thiago Moura|thiago.moura153@gmail.com|financeiro, gestao, marketing
-154|Felipe Martins|felipe.martins154@gmail.com|operacoes, vendas, gestao
-155|Camila Rocha|camila.rocha155@gmail.com|juridico, financeiro, rh
-156|Pedro Henrique|pedro.henrique156@gmail.com|rh, marketing, juridico
-157|Laura Costa|laura.costa157@gmail.com|vendas, logistica
-158|Rafael Oliveira|rafael.oliveira158@gmail.com|vendas, engenheiro
-159|Beatriz Santos|beatriz.santos159@gmail.com|gestao, cozinha, adm
-160|Felipe Martins|felipe.martins160@gmail.com|logistica, vendas, marketing
-161|Laura Costa|laura.costa161@gmail.com|vendas, juridico
-162|Julia Ramos|julia.ramos162@gmail.com|dev
-163|Isabela Gomes|isabela.gomes163@gmail.com|suporte, financeiro, cozinha
-164|Camila Rocha|camila.rocha164@gmail.com|adm, gestao, marketing
-165|Sofia Pires|sofia.pires165@gmail.com|juridico, dev
-166|Rafael Oliveira|rafael.oliveira166@gmail.com|rh, dev
-167|Caio Duarte|caio.duarte167@gmail.com|gestao
-168|Isabela Gomes|isabela.gomes168@gmail.com|logistica
-169|Felipe Martins|felipe.martins169@gmail.com|cozinha, logistica
-170|Mateus Carvalho|mateus.carvalho170@gmail.com|financeiro, logistica
-171|Rafael Oliveira|rafael.oliveira171@gmail.com|marketing
-172|JoÃ£o Pedro|joÃ£o.pedro172@gmail.com|financeiro, engenheiro, operacoes
-173|Sofia Pires|sofia.pires173@gmail.com|rh, gestao, operacoes
-174|Camila Rocha|camila.rocha174@gmail.com|suporte
-175|Mateus Carvalho|mateus.carvalho175@gmail.com|logistica, juridico, operacoes
-176|Helena Barros|helena.barros176@gmail.com|financeiro, adm
-177|Gabriel Fernandes|gabriel.fernandes177@gmail.com|dev
-178|JoÃ£o Pedro|joÃ£o.pedro178@gmail.com|cozinha, engenheiro, suporte
-179|Beatriz Santos|beatriz.santos179@gmail.com|suporte, engenheiro, logistica
-180|Pedro Henrique|pedro.henrique180@gmail.com|dev, financeiro, vendas
-181|Beatriz Santos|beatriz.santos181@gmail.com|suporte, dev
-182|Camila Rocha|camila.rocha182@gmail.com|juridico, adm, logistica
-183|Caio Duarte|caio.duarte183@gmail.com|juridico, engenheiro
-184|LÃ­via Azevedo|lÃ­via.azevedo184@gmail.com|rh, engenheiro, logistica
-185|Beatriz Santos|beatriz.santos185@gmail.com|rh, adm, cozinha
-186|Laura Costa|laura.costa186@gmail.com|marketing
-187|Mariana Souza|mariana.souza187@gmail.com|operacoes, engenheiro, adm
-188|Mariana Souza|mariana.souza188@gmail.com|engenheiro
-189|Lucas Almeida|lucas.almeida189@gmail.com|cozinha, suporte, engenheiro
-190|Julia Ramos|julia.ramos190@gmail.com|gestao, dev, financeiro
-191|Ana Clara|ana.clara191@gmail.com|operacoes, adm, rh
-192|Isabela Gomes|isabela.gomes192@gmail.com|financeiro
-193|Beatriz Santos|beatriz.santos193@gmail.com|gestao, financeiro
-194|Pedro Henrique|pedro.henrique194@gmail.com|operacoes, suporte
-195|LÃ­via Azevedo|lÃ­via.azevedo195@gmail.com|cozinha
-196|Julia Ramos|julia.ramos196@gmail.com|logistica
-197|Helena Barros|helena.barros197@gmail.com|adm, rh, operacoes
-198|Caio Duarte|caio.duarte198@gmail.com|adm, vendas
-199|Rafael Oliveira|rafael.oliveira199@gmail.com|vendas
-200|Pedro Henrique|pedro.henrique200@gmail.com|financeiro
+Lista de Pessoas
+1|Ana Clara|ana.clara1@gmail.com|marketing, vendas, rh
+2|Bruno Costa|bruno.costa2@gmail.com|dev, TI, suporte
+3|Carla Dias|carla.dias3@gmail.com|financeiro, contabilidade
+4|Daniel Esteves|daniel.esteves4@gmail.com|engenharia, produção
+5|Erika Fernandes|erika.fernandes5@gmail.com|marketing, redes sociais
+6|Fábio Gomes|fabio.gomes6@gmail.com|vendas, prospecção
+7|Giovana Horta|giovana.horta7@gmail.com|rh, treinamento
+8|Henrique Iglesias|henrique.iglesias8@gmail.com|logística, almoxarifado
+9|Isadora Jardim|isadora.jardim9@gmail.com|jurídico, contratos
+10|João Keppler|joao.keppler10@gmail.com|TI, segurança da informação
+11|Karen Lima|karen.lima11@gmail.com|marketing, SEO
+12|Luiz Morais|luiz.morais12@gmail.com|engenharia, projetos
+13|Mônica Nunes|monica.nunes13@gmail.com|financeiro, faturamento
+14|Nelson Oliveira|nelson.oliveira14@gmail.com|vendas, negociação
+15|Patrícia Pires|patricia.pires15@gmail.com|rh, recrutamento
+16|Ricardo Quintela|ricardo.quintela16@gmail.com|logística, entregas
+17|Simone Rocha|simone.rocha17@gmail.com|jurídico, compliance
+18|Tiago Santos|tiago.santos18@gmail.com|dev, front-end
+19|Ursula Teixeira|ursula.teixeira19@gmail.com|marketing, conteúdo
+20|Victor Viana|victor.viana20@gmail.com|TI, infraestrutura
+21|Wanda Xavier|wanda.xavier21@gmail.com|financeiro, contas a pagar
+22|Xavier Zacarias|xavier.zacarias22@gmail.com|vendas, pós-venda
+23|Yara Almeida|yara.almeida23@gmail.com|rh, benefícios
+24|Zeca Batista|zeca.batista24@gmail.com|engenharia, qualidade
+25|Alice Cardoso|alice.cardoso25@gmail.com|marketing, campanhas
+26|Bernardo Duarte|bernardo.duarte26@gmail.com|dev, back-end
+27|Cecília Esteves|cecilia.esteves27@gmail.com|financeiro, tesouraria
+28|Diego Fernandes|diego.fernandes28@gmail.com|logística, suprimentos
+29|Eduarda Gomes|eduarda.gomes29@gmail.com|jurídico, societário
+30|Felipe Horta|felipe.horta30@gmail.com|TI, suporte técnico
+31|Gabriela Iglesias|gabriela.iglesias31@gmail.com|rh, folha de pagamento
+32|Hugo Jardim|hugo.jardim32@gmail.com|vendas, consultoria
+33|Isabela Keppler|isabela.keppler33@gmail.com|marketing, e-commerce
+34|Júlio Lima|julio.lima34@gmail.com|engenharia, manutenção
+35|Larissa Morais|larissa.morais35@gmail.com|financeiro, controladoria
+36|Marcelo Nunes|marcelo.nunes36@gmail.com|dev, mobile
+37|Natália Oliveira|natalia.oliveira37@gmail.com|logística, expedição
+38|Otávio Pires|otavio.pires38@gmail.com|jurídico, cível
+39|Paula Quintela|paula.quintela39@gmail.com|rh, departamento pessoal
+40|Quirino Rocha|quirino.rocha40@gmail.com|TI, redes
+41|Raquel Santos|raquel.santos41@gmail.com|marketing, inbound
+42|Sérgio Teixeira|sergio.teixeira42@gmail.com|engenharia, P&D
+43|Tatiane Viana|tatiane.viana43@gmail.com|financeiro, auditoria
+44|Ubiratan Xavier|ubiratan.xavier44@gmail.com|vendas, gestão de equipe
+45|Vanessa Zacarias|vanessa.zacarias45@gmail.com|rh, cultura organizacional
+46|Wagner Almeida|wagner.almeida46@gmail.com|logística, distribuição
+47|Ximena Batista|ximena.batista47@gmail.com|jurídico, trabalhista
+48|Yasmin Cardoso|yasmin.cardoso48@gmail.com|TI, cloud
+49|Zélia Duarte|zelia.duarte49@gmail.com|marketing, publicidade
+50|André Esteves|andre.esteves50@gmail.com|dev, full-stack
+51|Bruna Fernandes|bruna.fernandes51@gmail.com|financeiro, contabilidade gerencial
+52|Carlos Gomes|carlos.gomes52@gmail.com|engenharia, automação
+53|Denise Horta|denise.horta53@gmail.com|vendas, inside sales
+54|Eliana Iglesias|eliana.iglesias54@gmail.com|rh, desenvolvimento organizacional
+55|Fernando Jardim|fernando.jardim55@gmail.com|logística, compras
+56|Gisele Keppler|gisele.keppler56@gmail.com|jurídico, tributário
+57|Heitor Lima|heitor.lima57@gmail.com|TI, big data
+58|Ingrid Morais|ingrid.morais58@gmail.com|marketing, assessoria de imprensa
+59|Jairo Nunes|jairo.nunes59@gmail.com|engenharia, robótica
+60|Kamila Oliveira|kamila.oliveira60@gmail.com|financeiro, orçamento
+61|Leandro Pires|leandro.pires61@gmail.com|vendas, key account
+62|Manuela Quintela|manuela.quintela62@gmail.com|rh, remuneração
+63|Nuno Rocha|nuno.rocha63@gmail.com|logística, planejamento
+64|Olívia Santos|olivia.santos64@gmail.com|jurídico, propriedade intelectual
+65|Paulo Teixeira|paulo.teixeira65@gmail.com|TI, data science
+66|Quezia Viana|quezia.viana66@gmail.com|marketing, relações públicas
+67|Roberto Xavier|roberto.xavier67@gmail.com|engenharia, elétrica
+68|Sofia Zacarias|sofia.zacarias68@gmail.com|financeiro, investimentos
+69|Túlio Almeida|tulio.almeida69@gmail.com|vendas, pré-venda
+70|Úrsula Batista|ursula.batista70@gmail.com|rh, diversidade e inclusão
+71|Valter Cardoso|valter.cardoso71@gmail.com|logística, inventário
+72|Xênia Duarte|xenia.duarte72@gmail.com|jurídico, contencioso
+73|Yago Esteves|yago.esteves73@gmail.com|TI, UX/UI
+74|Zara Fernandes|zara.fernandes74@gmail.com|marketing, eventos
+75|Alan Gomes|alan.gomes75@gmail.com|engenharia, civil
+76|Beatriz Horta|beatriz.horta76@gmail.com|financeiro, análise de custos
+77|Cássio Iglesias|cassio.iglesias77@gmail.com|vendas, televendas
+78|Diana Jardim|diana.jardim78@gmail.com|rh, comunicação interna
+79|Eduardo Keppler|eduardo.keppler79@gmail.com|logística, gestão de frota
+80|Flávia Lima|flavia.lima80@gmail.com|jurídico, contratos imobiliários
+81|Guilherme Morais|guilherme.morais81@gmail.com|TI, cibersegurança
+82|Heloísa Nunes|heloisa.nunes82@gmail.com|marketing, trade marketing
+83|Ícaro Oliveira|icaro.oliveira83@gmail.com|engenharia, ambiental
+84|Joana Pires|joana.pires84@gmail.com|financeiro, gestão de riscos
+85|Kleber Quintela|kleber.quintela85@gmail.com|vendas, consultoria de vendas
+86|Lívia Rocha|livia.rocha86@gmail.com|rh, avaliação de desempenho
+87|Marcelo Santos|marcelo.santos87@gmail.com|logística, cadeia de suprimentos
+88|Natasha Teixeira|natasha.teixeira88@gmail.com|jurídico, direito digital
+89|Otávio Viana|otavio.viana89@gmail.com|TI, inteligência artificial
+90|Priscila Xavier|priscila.xavier90@gmail.com|marketing, branding
+91|Renan Zacarias|renan.zacarias91@gmail.com|engenharia, química
+92|Sara Almeida|sara.almeida92@gmail.com|financeiro, fusões e aquisições
+93|Tânia Batista|tania.batista93@gmail.com|vendas, vendas externas
+94|Uriel Cardoso|uriel.cardoso94@gmail.com|rh, relações sindicais
+95|Vitória Duarte|vitoria.duarte95@gmail.com|logística, transporte
+96|Wesley Esteves|wesley.esteves96@gmail.com|jurídico, recuperação judicial
+97|Yasmim Fernandes|yasmin.fernandes97@gmail.com|TI, desenvolvimento de jogos
+98|Zoe Gomes|zoe.gomes98@gmail.com|marketing, analytics
+99|Artur Horta|artur.horta99@gmail.com|engenharia, mecânica
+100|Bia Iglesias|bia.iglesias100@gmail.com|financeiro, compliance financeiro
